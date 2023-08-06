@@ -1,0 +1,153 @@
+/* You can add global styles to this file, and also import other style files */
+app-sermon + app-sermon{
+    border-top: 2px solid darkgray !important;
+}
+
+.v1 {
+    height:100%;
+    width: 10px;
+    border-left: 2px solid lightgrey;
+    display: inline-block;
+}
+
+.clickable{
+    cursor:pointer;
+    text-decoration: underline;
+}
+
+.waveform-peak{
+    display: inline-block;
+}
+
+.o-10{
+    opacity: 0.1;
+    transition: opacity 0.5s;
+}
+
+.o-20{
+    opacity: 0.2;
+    transition: opacity 0.5s;
+}
+
+.o-30{
+    opacity: 0.3;
+    transition: opacity 0.5s;
+}
+
+.o-40{
+    opacity: 0.4;
+    transition: opacity 0.5s;
+}
+
+.o-50{
+    opacity: 0.5;
+    transition: opacity 0.5s;
+}
+
+.o-60{
+    opacity: 0.6;
+    transition: opacity 0.5s;
+}
+
+.o-70{
+    opacity: 0.7;
+    transition: opacity 0.5s;
+}
+
+.o-80{
+    opacity: 0.8;
+    transition: opacity 0.5s;
+}
+
+.o-90{
+    opacity: 0.9;
+    transition: opacity 0.5s;
+}
+
+.o-100{
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+
+.waveform-wrapper:hover .o-10,
+.o-10:hover{
+    opacity: 0.3;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-20,
+.o-20:hover{
+    opacity: 0.4;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-30,
+.o-30:hover{
+    opacity: 0.5;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-40,
+.o-40:hover{
+    opacity: 0.6;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-50,
+.o-50:hover{
+    opacity: 0.7;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-60,
+.o-60:hover{
+    opacity: 0.8;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-70,
+.o-70:hover{
+    opacity: 0.9;
+    transition: opacity 0.5s;
+}
+
+.waveform-wrapper:hover .o-80,
+.waveform-wrapper:hover .o-90,
+.waveform-wrapper:hover .o-100,
+.o-80:hover,
+.o-90:hover,
+.o-100:hover{
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.toggle::before{
+    transition: 0.5s;
+}
+
+.bi.bi-caret-down.toggle.active::before{
+    transform: rotate(90deg);
+}
+
+a{
+    color: #000;
+    opacity: 0.7;
+}
+
+a:hover{
+    color: #000;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.mt-match-label {
+    margin-top: 2em !important;
+}
+
+
+@media (min-width: 576px){
+    .mt-sm-match-label {
+        margin-top: 2em !important;
+    }
+}

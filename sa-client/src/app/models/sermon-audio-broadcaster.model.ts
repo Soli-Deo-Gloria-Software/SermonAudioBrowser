@@ -1,0 +1,30 @@
+export class SermonAudioBroadcaster {
+    aboutUs: string;
+    address: string;
+    albumArtURL: string;
+    bibleVersion: string;
+    broadcasterID: string;
+    canWebcast: boolean;
+    country: string;
+    countryISOCode: string;
+    denomination: string;
+    displayName: string;
+    facebookUsername: string;
+    homePageURL: string;
+    idCode: string;
+    imageUrl: string;
+    latitude: number;
+    listenLioneNumber: string;
+    location: string;
+    longitude: number;
+    minister: string;
+    phone: string;
+    serviceTypes: string;
+    serviceTimesArePreformatted: boolean;
+    shortName: string;
+    twitterUsername: string;
+    type: string;
+    vacantPulpit: boolean;
+    webcastInProgress: boolean;
+    welcomeVideoID: string;
+}

@@ -1,0 +1,71 @@
+<div class="sermon-audio-client">
+    <form class="mx-4 mt-4 m-auto">
+        <div class="mb-3 row">
+            <div class="col-12 col-md-6">
+                <label for="txtKeyword" class="form-label">Keyword</label>
+                <input type="text" name="txtKeyword" id="txtKeyword" class="form-control" [(ngModel)]="searchKeyword">
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="ddlSpeaker" class="form-label">Speaker</label>
+                <select name="ddlSpeaker" id="ddlSpeaker" class="form-select" [(ngModel)]="speaker">
+                    <option value="">All</option>
+                    <option *ngFor="let speaker of speakers$ | async" [value]="speaker.displayName">{{speaker.displayName}}</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="ddlSeries" class="form-label">Series</label>
+                <select name="ddlSeries" id="ddlSeries" class="form-select" [(ngModel)]="seriesID">
+                    <option value="0">All</option>
+                    <option *ngFor="let item of series$ | async" [value]="item.seriesID">{{item.title}} ({{item.count}})</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-lg-3 col-12">
+                <label for="ddlBook" class="form-label">Book</label>
+                <select name="ddlBook" id="ddlBook" class="form-select" [(ngModel)]="selectedBook">
+                    <option value=""></option>
+                    <option *ngFor="let key of bibleLabels" [value]="key">{{bibleBook[key]}}</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-3">
+                <label for="txtChapterFrom" class="form-label">From Chapter</label>
+                <input type="number" step="1" min="0" class="form-control" name="txtChapterFrom" id="txtChapterFrom" [(ngModel)]="chapterFrom" [disabled]="selectedBook == undefined">
+            </div>
+            <div class="col-lg-2 col-3">
+                <label for="txtVerseFrom" class="form-label pt-4 pt-sm-0">Verse</label>
+                <input type="number" step="1" min="0" class="form-control" name="txtVerseFrom" id="txtVerseFrom" [(ngModel)]="verseFrom" [disabled]="selectedBook == undefined || chapterFrom == undefined || chapterFrom == 0">
+            </div>
+            <div class="col-lg-2 col-3">
+                <label for="txtChapterTo" class="form-label">To Chapter</label>
+                <input type="number" step="1" min="0" class="form-control" name="txtChapterTo" id="txtChapterTo" [(ngModel)]="chapterTo" [disabled]="selectedBook == undefined">
+            </div>
+            <div class="col-lg-2 col-3">
+                <label for="txtVerseTo" class="form-label pt-4 pt-sm-0">Verse</label>
+                <input type="number" step="1" min="0" class="form-control" name="txtVerseTo" id="txtVerseTo" [(ngModel)]="verseTo" [disabled]="selectedBook == undefined || chapterTo == undefined || chapterTo == 0">
+            </div>
+            <div class="col text-end text-sm-center">
+                <button class="btn btn-secondary mt-3 mt-sm-match-label" (click)="search()">
+                    <ngx-spinner [fullScreen]="false" [name]="searchSpinner"></ngx-spinner>
+                    <span>Search</span>
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    <app-sermon [sermon]="sermon" *ngFor="let sermon of sermons$ | async" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
+
+    <div class="ms-4">
+        <ngb-pagination
+            [(page)]="pageNumber"
+            [pageSize]="pageSize"
+            [collectionSize]="totalCount"
+            (pageChange)="pageChanged()"
+            [maxSize]="5"
+            [rotate]="true"
+            [ellipses]="true"
+            [boundaryLinks]="true"
+            *ngIf="totalCount > pageSize"></ngb-pagination>
+    </div>
+</div>
