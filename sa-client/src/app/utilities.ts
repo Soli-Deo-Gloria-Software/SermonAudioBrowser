@@ -41,6 +41,8 @@ export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks: num
   }
 }
 
+export const EnumParse = <T>(enumObject: T, value: string): T[keyof T] | undefined=> enumObject[value as keyof typeof enumObject];
+
 // Gutter percent for waveform peaks. This was done with trial and error.
 // I should probably refactor to make the gutter dependent on the size of the reduced waveform,
 // but it kindof doesn't really matter, since target max peaks is also effectively a constant.

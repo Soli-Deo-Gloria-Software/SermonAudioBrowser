@@ -26,7 +26,7 @@
                 <label for="ddlBook" class="form-label">Book</label>
                 <select name="ddlBook" id="ddlBook" class="form-select" [(ngModel)]="selectedBook">
                     <option value=""></option>
-                    <option *ngFor="let key of bibleLabels" [value]="key">{{bibleBook[key]}}</option>
+                    <option *ngFor="let book of bibleBooks" [value]="book">{{bibleBookNames[book]}}</option>
                 </select>
             </div>
             <div class="col-lg-2 col-3">

@@ -2,7 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
-import { BibleBook } from 'src/app/models/enums/bible-book';
+import { EnumParse } from 'src/app/utilities';
+import { BibleBook, BibleBookNames } from 'src/app/models/enums/bible-book';
 import { SermonAudioSeries } from 'src/app/models/sermon-audio-series.model';
 import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
 import { SermonAudioSpeaker } from 'src/app/models/sermon-audio-speaker.model';
@@ -20,8 +21,9 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   series$: Observable<SermonAudioSeries[]>;
   searchKeyword: string = '';
   bibleBook = BibleBook;
+  bibleBookNames = BibleBookNames;
   selectedBook?: BibleBook = undefined;
-  bibleLabels = [];
+  bibleBooks: BibleBook[] = [];
   chapterFrom?: number;
   chapterTo?: number;
   verseFrom?: number;
@@ -31,11 +33,15 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   pageSize: number = 10;
   totalCount: number = 0;
   seriesID: number = 0;
-  searchSpinner = 'fillerDueToJankyImplementation';
+  searchSpinner = 'default';
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private _saService: SermonAudioServiceService, private _spinner: NgxSpinnerService) { 
-    this.bibleLabels = Object.keys(this.bibleBook);
+    Object.keys(this.bibleBook).filter(key => isNaN(<any>key))
+    .forEach(key => {
+      let book = EnumParse(this.bibleBook, key);
+      this.bibleBooks.push(book);
+    });
   }
 
   ngOnInit(): void {
