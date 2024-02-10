@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, of } from 'rxjs';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service.service';
 import * as utilities from 'src/app/utilities';
 
@@ -49,6 +49,11 @@ export class WaveformComponent implements OnInit, AfterViewInit {
         peaks = peaks.map(val => val * 100);
         this.peakWidth = (100/peaks.length) - utilities.peakGutterPercent;
         return peaks;
+      }),
+      catchError(() => {
+        let peaks = utilities.DefaultWaveform(this.maxNumberOfPeaks);
+        this.peakWidth = (100/peaks.length) - utilities.peakGutterPercent;
+        return of(peaks);
       }),
       tap(() => 
       {

@@ -41,6 +41,24 @@ export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks: num
   }
 }
 
+export const DefaultWaveform = (maxNumberOfPeaks:number):number[] =>{
+  let peaks:number[] = [];
+  let numberOfOscilations = 2;
+  let peaksPerOscilation = maxNumberOfPeaks/2/numberOfOscilations;
+
+  let piPerOscellation = Math.PI/peaksPerOscilation;
+
+  for (let i = 0; i < numberOfOscilations; i++)
+  {
+    for (let j = 1; j <= peaksPerOscilation; j++)
+    {
+      peaks.push(Math.abs(Math.sin(2*piPerOscellation*j))*95);
+    }
+  }
+
+  return peaks;
+}
+
 export const EnumParse = <T>(enumObject: T, value: string): T[keyof T] | undefined=> enumObject[value as keyof typeof enumObject];
 
 // Gutter percent for waveform peaks. This was done with trial and error.
