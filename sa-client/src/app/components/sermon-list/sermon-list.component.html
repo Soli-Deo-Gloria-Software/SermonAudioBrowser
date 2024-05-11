@@ -52,20 +52,20 @@
                 </button>
             </div>
         </div>
-    </form>
-    
-    <app-sermon [sermon]="sermon" *ngFor="let sermon of sermons$ | async" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
 
-    <div class="ms-4">
-        <ngb-pagination
-            [(page)]="pageNumber"
-            [pageSize]="pageSize"
-            [collectionSize]="totalCount"
-            (pageChange)="pageChanged()"
-            [maxSize]="5"
-            [rotate]="true"
-            [ellipses]="true"
-            [boundaryLinks]="true"
-            *ngIf="totalCount > pageSize"></ngb-pagination>
-    </div>
+        <app-sermon [sermon]="sermon" *ngFor="let sermon of sermons$ | async" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
+
+        <div class="ms-4">
+            <ngb-pagination
+                [(page)]="pageNumber"
+                [pageSize]="pageSize"
+                [collectionSize]="totalCount"
+                (pageChange)="pageChanged()"
+                [maxSize]="5"
+                [rotate]="true"
+                [ellipses]="true"
+                [boundaryLinks]="true"
+                *ngIf="totalCount > pageSize"></ngb-pagination>
+        </div>  
+    </form>
 </div>

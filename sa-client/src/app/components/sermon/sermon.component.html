@@ -7,8 +7,8 @@
             </a>
         </div>
         <div class="float-end">
-            <a href="#" class="h3 text-decoration-none" (click)="selectSpeaker(sermon.speaker.displayName)">{{sermon.speaker.displayName}} <small class="o-80">({{sermon.preachDate | date}})</small> <span *ngIf="sermon.series?.title" class="v1 ms-2 me-1">&nbsp;</span></a>
-            <a href="#" class="h4 text-decoration-none" *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)">{{sermon.series?.title}}</a>
+            <button class="btn btn-link btn-lg text-black text-decoration-none o-80 pe-0 py-0" (click)="selectSpeaker(sermon.speaker.displayName)"><span class="h3">{{sermon.speaker.displayName}} <small class="o-80">({{sermon.preachDate | date}})</small> <span *ngIf="sermon.series?.title" class="v1 ms-2">&nbsp;</span></span></button>
+            <button  class="btn btn-link btn-lg text-black text-decoration-none ms-0 ps-0 py-0 o-80" *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)"><span class="h4">{{sermon.series?.title}}</span></button>
         </div>
     </div>
     <div class="card-body">
