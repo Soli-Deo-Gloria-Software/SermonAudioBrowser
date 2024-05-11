@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, map, skip, take, takeUntil, tap } from 'rxjs/operators';
 import { EnumParse } from 'src/app/utilities';
 import { BibleBook, BibleBookNames } from 'src/app/models/enums/bible-book';
 import { SermonAudioSeries } from 'src/app/models/sermon-audio-series.model';
 import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
 import { SermonAudioSpeaker } from 'src/app/models/sermon-audio-speaker.model';
 import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sermon-list',
@@ -34,14 +35,44 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   totalCount: number = 0;
   seriesID: number = 0;
   searchSpinner = 'default';
+  sermonId: number = 0;
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(private _saService: SermonAudioServiceService, private _spinner: NgxSpinnerService) { 
+  constructor(private _saService: SermonAudioServiceService, private _spinner: NgxSpinnerService, private _route: ActivatedRoute) { 
     Object.keys(this.bibleBook).filter(key => isNaN(<any>key))
     .forEach(key => {
       let book = EnumParse(this.bibleBook, key);
       this.bibleBooks.push(book);
     });
+
+    this._route.queryParamMap
+    .pipe(
+      debounceTime(100),
+      take(1)
+    )
+    .subscribe({
+      next: query => {
+        console.log(query)
+        let speaker = query.get('speaker');
+        let series = query.get('series');
+        let sermonId = query.get('sermonId');
+
+        if (speaker){
+            this.speaker = speaker;
+        }
+
+        if (series && !isNaN(+series)) {
+          this.seriesID = +series;
+        }
+
+        if (sermonId && !isNaN(+sermonId)) {
+          this.sermonId = +sermonId;
+        }
+
+        this.pageNumber = 1;
+        this.getSermons();
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -49,7 +80,6 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.getSermons();
     this.getSpeakers();
     this.getSeries();
   }
@@ -71,7 +101,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   getSermons(){
     this._spinner.show(this.searchSpinner);
     
-    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.selectedBook, this.chapterFrom, this.chapterTo, this.verseFrom, this.verseTo, this.speaker, this.seriesID).pipe(
+    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.selectedBook, this.chapterFrom, this.chapterTo, this.verseFrom, this.verseTo, this.speaker, this.seriesID, this.sermonId).pipe(
       takeUntil(this.ngUnsubscribe),
       map(results => 
         {

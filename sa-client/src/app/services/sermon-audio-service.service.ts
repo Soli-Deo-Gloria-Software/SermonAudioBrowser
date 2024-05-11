@@ -45,7 +45,7 @@ export class SermonAudioServiceService {
     }))
   }
 
-  public getSermons(pageNumber: number, pageSize: number, keyword?: string, book?: BibleBook, chapterFrom?: number, chapterTo?: number, verseFrom?: number, verseTo?: number, speaker?: string, seriesID?: number) : Observable<SermonAudioV2ResponseWrapper<SermonAudioSermon>>{
+  public getSermons(pageNumber: number, pageSize: number, keyword?: string, book?: BibleBook, chapterFrom?: number, chapterTo?: number, verseFrom?: number, verseTo?: number, speaker?: string, seriesID?: number, sermonId?: number) : Observable<SermonAudioV2ResponseWrapper<SermonAudioSermon>>{
     let params: HttpParams = new HttpParams();
 
     params = params.append('page', pageNumber);
@@ -87,6 +87,10 @@ export class SermonAudioServiceService {
 
     if (seriesID){
       params = params.append('series', seriesID);
+    }
+
+    if (sermonId && sermonId > 0){
+      params = params.append('sermonIDs', sermonId)
     }
 
     return this._httpClient.get<any>(`${this._baseApiURL}/sermons`, {params: params}).pipe(

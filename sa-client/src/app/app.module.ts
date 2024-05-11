@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { WaveformComponent } from './components/waveform/waveform.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
+import { RouterModule } from '@angular/router';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +26,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     HttpClientModule,
     NgbModule,
     FormsModule,
+    RouterModule.forRoot([]),
     NgxSpinnerModule.forRoot({type: 'line-scale'})
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
