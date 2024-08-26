@@ -7,6 +7,6 @@
 //TODO: remove CCOPC when moving to public repo.
 export const environment = {
   production: false,
-  proxySermonApi: 'http://ccopc.org/wp-json/sermon-audio/v1',
+  proxySermonApi: 'https://ccopc.org/wp-json/sermon-audio/v1',
   proxyEsvApi: 'https://ccopc.org/wp-json/scripture/v1'
 };
