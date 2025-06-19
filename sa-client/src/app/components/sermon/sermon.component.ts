@@ -25,7 +25,7 @@ export class SermonComponent implements OnInit {
   showVideo: boolean = false;
   showAudio: boolean = false;
   showDescription: boolean = false;
-  sermonHtml: SafeHtml;
+  scriptureHtml: SafeHtml;
   spinnerId: string = '';
   esvResponse: EsvResponse;
   esvIndex: number = 0;
@@ -62,7 +62,7 @@ export class SermonComponent implements OnInit {
         this.descriptionChunks = this.sermon.moreInfoText.split('\n').filter(chunk => chunk);
       }
   
-      if (!this.sermonHtml && bibleRefs) {
+      if (!this.scriptureHtml && bibleRefs) {
         this._spinner.show(this.spinnerId);
         this._scriptureService.GetScripture(bibleRefs).subscribe(result => {
           this.esvResponse = result;
@@ -70,7 +70,7 @@ export class SermonComponent implements OnInit {
 
           console.log(result);
           if (result.passages){
-            this.sermonHtml = this.sanitizer.bypassSecurityTrustHtml(result.passages[0]);
+            this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(result.passages[0]);
           }
         }, error => console.log(error))
         .add(() => this._spinner.hide(this.spinnerId));
@@ -79,7 +79,7 @@ export class SermonComponent implements OnInit {
   }
 
   scriptureChanged(){
-    this.sermonHtml = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[this.esvIndex]);
+    this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[this.esvIndex]);
   }
 
   selectSeries(seriesID: number){

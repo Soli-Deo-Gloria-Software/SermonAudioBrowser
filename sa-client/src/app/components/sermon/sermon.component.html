@@ -44,7 +44,7 @@
                 <select name="ddlScripture" id="ddlScripture" class="form-select" *ngIf="showScriptureDropDown" [(ngModel)]="esvIndex" (change)="scriptureChanged()">
                     <option [value]="i" *ngFor="let reference of esvResponse.passage_meta; let i=index;">{{reference.canonical}}</option>
                 </select>
-                <div [innerHTML]="sermonHtml"></div>
+                <div [innerHTML]="scriptureHtml"></div>
             </div>
             <div class="col" *ngIf="sermon.moreInfoText">
                 <h3>Description</h3>
