@@ -4,7 +4,7 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-brows
 import { ScriptureService } from 'src/app/services/scripture.service';
 import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BibleParser } from 'bible-reference-finder';
+import { BibleParser } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 
 @Component({
@@ -31,7 +31,7 @@ export class SermonComponent implements OnInit {
   esvIndex: number = 0;
   showScriptureDropDown: boolean = false;
   descriptionChunks: string[] = [];
-  bibleParser: BibleParser.BibleParserV2 = new BibleParser.BibleParserV2();
+  bibleParser: BibleParser = new BibleParser();
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
     this.spinnerId = randomString();
   }
