@@ -11,10 +11,10 @@ import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-sermon-list',
-  templateUrl: './sermon-list.component.html',
-  styles: [
-  ]
+    selector: 'app-sermon-list',
+    templateUrl: './sermon-list.component.html',
+    styles: [],
+    standalone: false
 })
 export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   sermons$: Observable<SermonAudioSermon[]>;

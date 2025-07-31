@@ -6,9 +6,10 @@ import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service
 import * as utilities from 'src/app/utilities';
 
 @Component({
-  selector: 'app-waveform',
-  templateUrl: './waveform.component.html',
-  styleUrls: []
+    selector: 'app-waveform',
+    templateUrl: './waveform.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class WaveformComponent implements OnInit, AfterViewInit {
   peaks$: Observable<number[]>;
