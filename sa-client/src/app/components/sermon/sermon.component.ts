@@ -4,7 +4,7 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-brows
 import { ScriptureService } from 'src/app/services/scripture.service';
 import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { parseText } from 'bible-verse-parser';
+import { BibleParser } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 
 @Component({
@@ -31,13 +31,13 @@ export class SermonComponent implements OnInit {
   esvIndex: number = 0;
   showScriptureDropDown: boolean = false;
   descriptionChunks: string[] = [];
+  bibleParser: BibleParser = new BibleParser();
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
     this.spinnerId = randomString();
   }
 
   ngOnInit(): void {
     this.sermonAudioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/a/${this.sermon.sermonID}/`);
-
     if (this.sermon.media.video.length > 0)
     {
       this.sermonAudioVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/v/${this.sermon.sermonID}/`);
@@ -52,10 +52,12 @@ export class SermonComponent implements OnInit {
     if (this.showDescription){
       if (this.sermon.moreInfoText)
       {
-        let parsed = parseText(this.sermon.moreInfoText);
+        let parsed = this.bibleParser.parse(this.sermon.moreInfoText);
         if (parsed && parsed.length > 0){
           parsed.forEach(hit => {
-            bibleRefs += `; ${hit.text}`;
+            hit.BibleReferences.forEach(ref => {
+              bibleRefs += `; ${ref.Canonical}`
+            })
           })
         }
 
