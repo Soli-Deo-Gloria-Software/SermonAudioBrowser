@@ -8,10 +8,10 @@ import { BibleParser } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 
 @Component({
-  selector: 'app-sermon',
-  templateUrl: './sermon.component.html',
-  styles: [
-  ]
+    selector: 'app-sermon',
+    templateUrl: './sermon.component.html',
+    styles: [],
+    standalone: false
 })
 export class SermonComponent implements OnInit {
   @Input() sermon: SermonAudioSermon;
