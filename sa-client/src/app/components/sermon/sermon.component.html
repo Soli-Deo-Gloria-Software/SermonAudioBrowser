@@ -1,19 +1,19 @@
-<div class="card mx-3 mt-2 m-auto border-0">
+<div class="card mx-0 mx-md-3 mt-2 m-auto border-0">
     <div class="card-header bg-transparent">
         <div class="float-start">
             <a (click)="toggleDescription()" class="clickable text-decoration-none">
-                <span class="h3">{{sermon.fullTitle}} <span class="v1 ms-2 me-1" *ngIf="sermon.bibleText">&nbsp;</span></span> 
-                <span class="h4" *ngIf="sermon.bibleText || sermon.moreInfoText">{{sermon.bibleText}} <i class="bi bi-caret-down toggle" [class.active]="showDescription"></i></span>
+                <span class="h3"><span class="d-none d-md-inline">{{sermon.fullTitle}}</span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span> <span class="d-none d-md-inline v1 ms-2 me-1" *ngIf="sermon.bibleText">&nbsp;</span></span> 
+                <span class="h4" *ngIf="sermon.bibleText || sermon.moreInfoText"><span class="d-none d-md-inline">{{sermon.bibleText}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i></span>
             </a>
         </div>
         <div class="float-end">
-            <button class="btn btn-link btn-lg text-black text-decoration-none o-80 pe-0 py-0" (click)="selectSpeaker(sermon.speaker.displayName)"><span class="h3">{{sermon.speaker.displayName}} <small class="o-80">({{sermon.preachDate | date}})</small> <span *ngIf="sermon.series?.title" class="v1 ms-2">&nbsp;</span></span></button>
-            <button  class="btn btn-link btn-lg text-black text-decoration-none ms-0 ps-0 py-0 o-80" *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)"><span class="h4">{{sermon.series?.title}}</span></button>
+            <button class="btn btn-link btn-lg text-black text-decoration-none o-80 pe-0 py-0" (click)="selectSpeaker(sermon.speaker.displayName)"><span class="h3">{{sermon.speaker.displayName}} <small class="o-80 d-none d-md-inline">({{sermon.preachDate | date}})</small> <span *ngIf="sermon.series?.title" class="d-none d-md-inline v1 ms-2">&nbsp;</span></span></button>
+            <button  class="d-md-inline d-none btn btn-link btn-lg text-black text-decoration-none ms-0 ps-0 py-0 o-80" *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)"><span class="h4">{{sermon.series?.title}}</span></button>
         </div>
     </div>
     <div class="card-body">
         <div class="row" *ngIf="!showAudio && !showVideo">
-            <div class="col" style="margin-top:-20px;">
+            <div class="col" style="margin-top:-40px;">
                 <div class="position-absolute w-100" style="z-index:1000; margin-top:74px;">
                     <div class="row d-flex justify-content-center">
                         <div class="col">
@@ -39,14 +39,14 @@
             <div class="col"></div>
         </div>
         <div class="row" *ngIf="showDescription">
-            <div class="col">
+            <div class="col-12 col-md-6">
                 <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
                 <select name="ddlScripture" id="ddlScripture" class="form-select" *ngIf="showScriptureDropDown" [(ngModel)]="esvIndex" (change)="scriptureChanged()">
                     <option [value]="i" *ngFor="let reference of esvResponse.passage_meta; let i=index;">{{reference.canonical}}</option>
                 </select>
                 <div [innerHTML]="scriptureHtml"></div>
             </div>
-            <div class="col" *ngIf="sermon.moreInfoText">
+            <div class="col-12 col-md-6" *ngIf="sermon.moreInfoText">
                 <h3>Description</h3>
                 <p *ngFor="let chunk of descriptionChunks">{{chunk}}</p>
             </div>
