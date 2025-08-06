@@ -1,0 +1,4 @@
+<div class="bg-secondary p-4" (click)="onAvatarClicked()" [ngStyle]="{'border-radius': borderRadius }" [title]="name">
+    <img *ngIf="src" [src]="src" />
+    <span *ngIf="!src">{{initials}}</span>
+</div>
