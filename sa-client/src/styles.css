@@ -69,7 +69,6 @@ app-sermon + app-sermon{
     transition: opacity 0.5s;
 }
 
-
 .waveform-wrapper:hover .o-10,
 .o-10:hover{
     opacity: 0.3;

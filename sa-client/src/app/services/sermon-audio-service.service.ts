@@ -5,7 +5,7 @@ import { SermonAudioSermon } from '../models/sermon-audio-sermon.model';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'
-import { BibleBook, OsisBookAbbreviations } from '../models/enums/bible-book';
+import { BibleBook, BibleBookOsisCodes } from '@soli-deo-gloria-software/bible-books';
 import { SermonAudioSpeaker } from '../models/sermon-audio-speaker.model';
 import { SermonAudioSeries } from '../models/sermon-audio-series.model';
 
@@ -58,7 +58,7 @@ export class SermonAudioServiceService {
 
     if (book)
     {
-      let osis = OsisBookAbbreviations[book];
+      let osis = BibleBookOsisCodes[book];
       params = params.append('book', osis);
     }
 

@@ -6,6 +6,7 @@ import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BibleParser } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
+import * as AvatarSize from 'src/app/models/enums/avatar-size'
 
 @Component({
   selector: 'app-sermon-v2',
@@ -31,6 +32,7 @@ export class SermonV2Component implements OnInit {
   showScriptureDropDown: boolean = false;
   descriptionChunks: string[] = [];
   bibleParser: BibleParser = new BibleParser();
+  AvatarSize = AvatarSize.AvatarSize;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
     this.spinnerId = randomString();
   }
@@ -87,8 +89,9 @@ export class SermonV2Component implements OnInit {
     this.seriesSelected.emit(seriesID);
   }
 
-  selectSpeaker(speakerName: string)
+  selectSpeaker()
   {
-    this.speakerSelected.emit(speakerName);
+    console.log('speaker select clicked')
+    this.speakerSelected.emit(this.sermon.speaker.displayName);
   }
 }
