@@ -15,6 +15,7 @@ export class WaveformComponent implements OnInit, AfterViewInit {
   peaks$: Observable<number[]>;
   @Input() sermonId: number;
   @Input() height: number;
+  @Input() maxHeight: number;
   @Input() maxNumberOfPeaks: number;
   spinnerId: string = '';
   protected ngUnsubscribe: Subject<void> = new Subject<void>();

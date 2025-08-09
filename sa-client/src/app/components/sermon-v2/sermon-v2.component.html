@@ -11,18 +11,18 @@
     <div class="card-body">
         <div class="row" *ngIf="!showAudio && !showVideo">
             <div class="col" style="margin-top:-40px;">
-                <div class="position-absolute w-100" style="z-index:1000; margin-top:74px;">
+                <div class="position-absolute w-100" style="z-index:1000; margin-top:10vh;">
                     <div class="row d-flex justify-content-center">
                         <div class="col">
                             <div class="text-center">
-                                <button class="btn btn-primary px-4 o-90" [class.me-2]="hasVideo" (click)="showAudio = true">Listen</button>
-                                <button class="btn btn-primary px-4 o-90" (click)="showVideo = true" *ngIf="hasVideo">Watch</button>
+                                <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true">Listen</button>
+                                <button class="btn btn-primary px-4 o-80" (click)="showVideo = true" *ngIf="hasVideo">Watch</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <app-waveform [sermonId]="sermon.sermonID" height="150" maxNumberOfPeaks="500"></app-waveform>
+                <app-waveform [sermonId]="sermon.sermonID" height="150" maxHeight="20" maxNumberOfPeaks="500"></app-waveform>
             </div>
         </div>
         <div class="row" *ngIf="showAudio">
