@@ -127,13 +127,17 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectSeries(seriesID: number){
-    this.seriesID = seriesID;
-    this.search();
+    if (this.seriesID != seriesID){
+      this.seriesID = seriesID;
+      this.search();
+    }
   }
 
   selectSpeaker(speakerName: string){
-    this.speaker = speakerName;
-    this.search();
+    if (this.speaker != speakerName){
+      this.speaker = speakerName;
+      this.search();
+    }
   }
 
   pageChanged(){

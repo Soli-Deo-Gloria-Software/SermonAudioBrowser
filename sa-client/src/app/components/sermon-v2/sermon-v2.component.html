@@ -3,8 +3,8 @@
         <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
         <div class="ms-2">
             <a (click)="toggleDescription()" class="clickable text-decoration-none">
-                <h4 class="h4" *ngIf="sermon.bibleText || sermon.moreInfoText"><span>{{sermon.bibleText}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i></h4>
-                <h5 class="h5 o-90"><span class="d-none d-md-inline">{{sermon.fullTitle}}</span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span></h5> 
+                <h4 class="h4" *ngIf="sermon.bibleText || sermon.moreInfoText"><span>{{sermon.bibleText}}</span></h4>
+                <h5 class="h5 o-90"><span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i></h5> 
             </a>
         </div>
     </div>
