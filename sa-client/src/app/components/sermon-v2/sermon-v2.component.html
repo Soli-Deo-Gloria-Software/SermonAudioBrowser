@@ -1,6 +1,9 @@
 <div class="card mx-0 mx-md-3 mt-2 m-auto border-0">
     <div class="card-header bg-transparent d-flex align-items-center">
-        <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
+        <div style="width:75px; position:relative">
+            <a href="#" *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-100" style="position:absolute; top:0; right:0; z-index: 100;">{{sermon.series?.title}}</a>
+            <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
+        </div>
         <div class="ms-2">
             <a (click)="toggleDescription()" class="clickable text-decoration-none">
                 <h4 class="h4" *ngIf="sermon.bibleText || sermon.moreInfoText"><span>{{sermon.bibleText}}</span></h4>
