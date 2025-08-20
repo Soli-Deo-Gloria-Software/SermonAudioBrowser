@@ -33,6 +33,7 @@ export class SermonV2Component implements OnInit {
   descriptionChunks: string[] = [];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
+  maxNumberOfPeaks: number = 450;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
     this.spinnerId = randomString();
   }
@@ -44,6 +45,25 @@ export class SermonV2Component implements OnInit {
       this.sermonAudioVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/v/${this.sermon.sermonID}/`);
       this.hasVideo = true;
     }
+
+    this.maxNumberOfPeaks = this.computePeakCount(window.innerHeight);
+  }
+
+  computePeakCount(innerWidth: number): number{
+    let peaks:number = 500;
+    if (innerWidth <= 576){
+      peaks = 250;
+    } else if (innerWidth <= 768){
+      peaks = 250;
+    } else if (innerWidth <= 992){
+      peaks = 250;
+    } else if (innerWidth <= 1200){
+      peaks = 400;
+    } else if (innerWidth <= 1400){
+      peaks = 450;
+    }
+
+    return peaks;
   }
 
   toggleDescription(){

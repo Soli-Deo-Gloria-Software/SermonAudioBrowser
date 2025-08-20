@@ -52,7 +52,7 @@ export const DefaultWaveform = (maxNumberOfPeaks:number):number[] =>{
   {
     for (let j = 1; j <= peaksPerOscilation; j++)
     {
-      peaks.push(Math.abs(Math.sin(2*piPerOscellation*j))*95);
+      peaks.push(Math.abs(Math.sin(2*piPerOscellation*j))*70);
     }
   }
 

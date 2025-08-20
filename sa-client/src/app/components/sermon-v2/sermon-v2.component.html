@@ -1,31 +1,34 @@
 <div class="card mx-0 mx-md-3 mt-2 m-auto border-0">
     <div class="card-header bg-transparent d-flex align-items-center">
-        <button href="#" *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80" style="position:absolute; top:0; right:0; z-index: 100;">{{sermon.series?.title}}</button>
         <div style="width:75px; position:relative">
             <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
         </div>
         <div class="ms-2">
-            <a (click)="toggleDescription()" class="clickable text-decoration-none">
-                <h4 class="h4" *ngIf="sermon.bibleText || sermon.moreInfoText"><span>{{sermon.bibleText}}</span></h4>
-                <h5 class="h5 o-90"><span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i></h5> 
+            <a class="text-decoration-none">
+                <h4 class="h4 clickable" *ngIf="sermon.bibleText || sermon.moreInfoText" (click)="toggleDescription()"><span>{{sermon.bibleText}}</span></h4>
+                <h5 class="h5 o-90 clickable" (click)="toggleDescription()">
+                    <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i>
+                </h5> 
             </a>
         </div>
     </div>
     <div class="card-body">
         <div class="row" *ngIf="!showAudio && !showVideo">
             <div class="col" style="margin-top:-40px;">
-                <div class="position-absolute w-100" style="z-index:1000; margin-top:10vh;">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col">
-                            <div class="text-center">
-                                <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true">Listen</button>
-                                <button class="btn btn-primary px-4 o-80" (click)="showVideo = true" *ngIf="hasVideo">Watch</button>
+                <div class="position-absolute w-100" style="z-index:1000;">
+                    <a *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80 text-decoration-none mt-1 me-3 clickable" style="position:absolute; top:0; right:0; z-index: 100;">Series: {{sermon.series?.title}}</a>
+                    <div class="mt-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col">
+                                <div class="text-center me-4">
+                                    <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true">Listen</button>
+                                    <button class="btn btn-primary px-4 o-80" (click)="showVideo = true" *ngIf="hasVideo">Watch</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <app-waveform [sermonId]="sermon.sermonID" height="150" maxHeight="20" maxNumberOfPeaks="500"></app-waveform>
+                <app-waveform [sermonId]="sermon.sermonID" height="100" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks"></app-waveform>
             </div>
         </div>
         <div class="row" *ngIf="showAudio">

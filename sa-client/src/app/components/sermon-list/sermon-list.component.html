@@ -53,8 +53,8 @@
             </div>
         </div>
         <div *ngFor="let sermon of sermons$ | async; index as i">
-            <app-sermon *ngIf="i % 2 == 0" [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
-            <app-sermon-v2 *ngIf="i % 2 == 1" [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon-v2>
+            <!--<app-sermon *ngIf="i % 2 == 0" [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>-->
+            <app-sermon-v2 [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon-v2>
         </div>
 
         <div class="ms-4">
