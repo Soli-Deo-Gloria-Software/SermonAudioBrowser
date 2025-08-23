@@ -51,7 +51,7 @@ export class WaveformComponent implements OnInit, AfterViewInit {
         peaks = peaks.map(val => val * 100);
         let max = Math.max(...peaks)
         if (max < 75) {
-          peaks = peaks.map(peak => peak = (peak * 10 / 9))
+          peaks = peaks.map(peak => peak = peak + (1 / 20))
         }
         this.peakWidth = (100/peaks.length) - utilities.peakGutterPercent;
         return peaks;

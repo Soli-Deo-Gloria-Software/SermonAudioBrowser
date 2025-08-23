@@ -36,6 +36,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   seriesID: number = 0;
   searchSpinner = 'default';
   sermonId: number = 0;
+  legacyMode: boolean = false;
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private _saService: SermonAudioServiceService, private _spinner: NgxSpinnerService, private _route: ActivatedRoute) { 
@@ -56,6 +57,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
         let speaker = query.get('speaker');
         let series = query.get('series');
         let sermonId = query.get('sermonId');
+        let legacyMode = query.get('legacyMode');
 
         if (speaker){
             this.speaker = speaker;
@@ -67,6 +69,10 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (sermonId && !isNaN(+sermonId)) {
           this.sermonId = +sermonId;
+        }
+
+        if (legacyMode && legacyMode.toLowerCase() == "true"){
+          this.legacyMode = true;
         }
 
         this.pageNumber = 1;

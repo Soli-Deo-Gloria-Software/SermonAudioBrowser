@@ -46,7 +46,7 @@ export class SermonV2Component implements OnInit {
       this.hasVideo = true;
     }
 
-    this.maxNumberOfPeaks = this.computePeakCount(window.innerHeight);
+    this.maxNumberOfPeaks = this.computePeakCount(window.innerWidth);
   }
 
   computePeakCount(innerWidth: number): number{
@@ -58,9 +58,9 @@ export class SermonV2Component implements OnInit {
     } else if (innerWidth <= 992){
       peaks = 250;
     } else if (innerWidth <= 1200){
-      peaks = 400;
+      peaks = 500;
     } else if (innerWidth <= 1400){
-      peaks = 450;
+      peaks = 750;
     }
 
     return peaks;

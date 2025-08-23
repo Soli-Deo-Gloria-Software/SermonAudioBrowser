@@ -1,6 +1,6 @@
 <div [style.height.px]="height" [style.maxHeight.vh]="maxHeight" class="waveform-wrapper">
     <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
-    <div class="row h-100">
+    <div class="row" style="height:80%">
         <div class="col d-flex o-80">
             <div *ngFor="let peak of peaks$ | async" class="mx-auto h-100" [style.width.%]="peakWidth">
                 <div class="h-75 d-flex">
