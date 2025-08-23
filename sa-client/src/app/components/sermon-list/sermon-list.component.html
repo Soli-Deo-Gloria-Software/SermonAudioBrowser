@@ -53,8 +53,7 @@
             </div>
         </div>
         <div *ngFor="let sermon of sermons$ | async; index as i">
-            <app-sermon *ngIf="legacyMode" [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
-            <app-sermon-v2  *ngIf="!legacyMode" [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon-v2>
+            <app-sermon  [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
         </div>
 
         <div class="ms-4">
