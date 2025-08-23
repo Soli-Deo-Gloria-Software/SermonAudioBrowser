@@ -33,7 +33,7 @@ export class SermonV2Component implements OnInit {
   descriptionChunks: string[] = [];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
-  maxNumberOfPeaks: number = 450;
+  maxNumberOfPeaks: number;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
     this.spinnerId = randomString();
   }
@@ -50,16 +50,14 @@ export class SermonV2Component implements OnInit {
   }
 
   computePeakCount(innerWidth: number): number{
-    let peaks:number = 500;
+    let peaks:number = 1000;
     if (innerWidth <= 576){
-      peaks = 250;
+      peaks = 150;
     } else if (innerWidth <= 768){
       peaks = 250;
     } else if (innerWidth <= 992){
-      peaks = 250;
-    } else if (innerWidth <= 1200){
       peaks = 500;
-    } else if (innerWidth <= 1400){
+    } else if (innerWidth <= 1200){
       peaks = 750;
     }
 

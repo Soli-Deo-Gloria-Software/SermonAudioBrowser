@@ -1,6 +1,6 @@
-<div class="card mx-0 mx-md-3 mt-2 m-auto border-0">
-    <div class="card-header bg-transparent d-flex">
-        <div class="align-items-center d-flex">
+<div class="row mx-0 mx-md-3 mt-2 m-auto border-0">
+    <div class="col-12 bg-transparent pb-1" style="border-bottom: 1px solid black; position:relative">
+        <div class="w-100 align-items-center d-flex">
             <div style="width:75px; position:relative">
                 <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
             </div>
@@ -13,13 +13,13 @@
                 </a>
             </div>
         </div>
-        <div class="position-absolute d-flex h-100 w-100" style="z-index:1000">
+        <div class="position-absolute" style="z-index:1000; bottom:0; right:0;">
             <a *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon.series?.title}}</a>
         </div>
     </div>
-    <div class="card-body">
+    <div class="col-12">
         <div class="row" *ngIf="!showAudio && !showVideo">
-            <div class="col" style="margin-top:-40px;">
+            <div class="col">
                 <div class="position-absolute w-100" style="z-index:1000;">
                     <div class="mt-4 pt-2">
                         <div class="row d-flex justify-content-center">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-                <app-waveform [sermonId]="sermon.sermonID" height="100" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks"></app-waveform>
+                <app-waveform [sermonId]="sermon.sermonID" height="80" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks"></app-waveform>
             </div>
         </div>
         <div class="row" *ngIf="showAudio">
