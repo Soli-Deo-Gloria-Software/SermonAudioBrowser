@@ -2,16 +2,17 @@ export const randomString = ():string => {
     return (Math.random().toString(36) + '00000000000000000').substring(7);
   }
 
-export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks: number): number[] => {
-  if (baseWaveform.length <= maximumNumberOfPeaks){
+export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks?: number): number[] => {
+  if (!maximumNumberOfPeaks || baseWaveform.length <= maximumNumberOfPeaks){
     return baseWaveform;
   }
   else{
     let reduced: number[] = [...baseWaveform];
-    let interval = Math.ceil(reduced.length / maximumNumberOfPeaks);
 
     while (reduced.length > maximumNumberOfPeaks)
     {
+      let interval = Math.max(Math.ceil(reduced.length / maximumNumberOfPeaks), 2);
+
       let length = reduced.length;
       let oldArray = [...reduced];
       reduced = [];
@@ -36,7 +37,6 @@ export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks: num
         }
       }
     }
-
     return reduced;
   }
 }
@@ -52,7 +52,7 @@ export const DefaultWaveform = (maxNumberOfPeaks:number):number[] =>{
   {
     for (let j = 1; j <= peaksPerOscilation; j++)
     {
-      peaks.push(Math.abs(Math.sin(2*piPerOscellation*j))*95);
+      peaks.push(Math.abs(Math.sin(2*piPerOscellation*j))*70);
     }
   }
 

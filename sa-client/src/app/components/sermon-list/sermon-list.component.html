@@ -52,8 +52,9 @@
                 </button>
             </div>
         </div>
-
-        <app-sermon [sermon]="sermon" *ngFor="let sermon of sermons$ | async" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
+        <div *ngFor="let sermon of sermons$ | async; index as i">
+            <app-sermon  [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
+        </div>
 
         <div class="ms-4">
             <ngb-pagination

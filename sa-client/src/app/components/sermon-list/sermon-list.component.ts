@@ -3,7 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, skip, take, takeUntil, tap } from 'rxjs/operators';
 import { EnumParse } from 'src/app/utilities';
-import { BibleBook, BibleBookNames } from 'src/app/models/enums/bible-book';
+import { BibleBook, BibleBookNames } from '@soli-deo-gloria-software/bible-books';
 import { SermonAudioSeries } from 'src/app/models/sermon-audio-series.model';
 import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
 import { SermonAudioSpeaker } from 'src/app/models/sermon-audio-speaker.model';
@@ -127,13 +127,17 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectSeries(seriesID: number){
-    this.seriesID = seriesID;
-    this.search();
+    if (this.seriesID != seriesID){
+      this.seriesID = seriesID;
+      this.search();
+    }
   }
 
   selectSpeaker(speakerName: string){
-    this.speaker = speakerName;
-    this.search();
+    if (this.speaker != speakerName){
+      this.speaker = speakerName;
+      this.search();
+    }
   }
 
   pageChanged(){

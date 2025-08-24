@@ -1,4 +1,4 @@
-<div [style.height.px]="height" class="waveform-wrapper">
+<div [style.height.px]="height" [style.maxHeight.vh]="maxHeight" class="waveform-wrapper">
     <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
     <div class="row h-100">
         <div class="col d-flex o-80">
@@ -7,7 +7,7 @@
                     <div class="waveform-peak float-start bg-secondary mt-auto o-100 w-100" [style.height.%]="peak" ></div>
                 </div>
                 <div class="h-25 d-flex">
-                    <div class="waveform-peak float-start bg-secondary mb-auto o-80 w-100" [style.height.%]="peak"></div>
+                    <div class="waveform-peak float-start bg-secondary mb-auto o-70 w-100" [style.height.%]="peak"></div>
                 </div>
             </div>
         </div>

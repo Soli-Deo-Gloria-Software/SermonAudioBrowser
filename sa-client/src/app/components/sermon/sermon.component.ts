@@ -6,12 +6,12 @@ import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BibleParser } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
+import * as AvatarSize from 'src/app/models/enums/avatar-size'
 
 @Component({
-    selector: 'app-sermon',
-    templateUrl: './sermon.component.html',
-    styles: [],
-    standalone: false
+  selector: 'app-sermon',
+  templateUrl: './sermon.component.html',
+  standalone: false
 })
 export class SermonComponent implements OnInit {
   @Input() sermon: SermonAudioSermon;
@@ -32,6 +32,8 @@ export class SermonComponent implements OnInit {
   showScriptureDropDown: boolean = false;
   descriptionChunks: string[] = [];
   bibleParser: BibleParser = new BibleParser();
+  AvatarSize = AvatarSize.AvatarSize;
+  maxNumberOfPeaks: number;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
     this.spinnerId = randomString();
   }
@@ -43,6 +45,23 @@ export class SermonComponent implements OnInit {
       this.sermonAudioVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/v/${this.sermon.sermonID}/`);
       this.hasVideo = true;
     }
+
+    this.maxNumberOfPeaks = this.computePeakCount(window.innerWidth);
+  }
+
+  computePeakCount(innerWidth: number): number{
+    let peaks:number = 1000;
+    if (innerWidth <= 576){
+      peaks = 150;
+    } else if (innerWidth <= 768){
+      peaks = 250;
+    } else if (innerWidth <= 992){
+      peaks = 500;
+    } else if (innerWidth <= 1200){
+      peaks = 750;
+    }
+
+    return peaks;
   }
 
   toggleDescription(){
@@ -88,8 +107,9 @@ export class SermonComponent implements OnInit {
     this.seriesSelected.emit(seriesID);
   }
 
-  selectSpeaker(speakerName: string)
+  selectSpeaker()
   {
-    this.speakerSelected.emit(speakerName);
+    console.log('speaker select clicked')
+    this.speakerSelected.emit(this.sermon.speaker.displayName);
   }
 }

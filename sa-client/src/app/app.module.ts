@@ -12,9 +12,11 @@ import { WaveformComponent } from './components/waveform/waveform.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { RouterModule } from '@angular/router';
+import { AvatarComponent } from './components/avatar/avatar.component';
 
 @NgModule({ declarations: [
         AppComponent,
+        AvatarComponent,
         SermonComponent,
         SermonListComponent,
         WaveformComponent,

@@ -1,0 +1,7 @@
+<div class="me-2" (click)="onAvatarClicked()" class="avatar-container" [ngClass]="{'lg': size == AvatarSize.lg, 'sm': size == AvatarSize.sm }" [ngStyle]="{'border-radius': borderRadius }" [title]="name">
+    <span class="avatar-background w-100 h-100 bg-secondary d-inline-block"></span>
+    <div class="avatar-content w-100 h-100 d-flex">
+        <img *ngIf="src" [src]="src" />
+        <span class="mx-auto text-light" [ngClass]="{'h1': size == AvatarSize.lg, 'h3': size == AvatarSize.md, 'h6': size == AvatarSize.sm}" *ngIf="!src">{{initials}}</span>
+    </div>
+</div>

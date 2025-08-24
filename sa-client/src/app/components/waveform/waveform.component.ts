@@ -15,7 +15,8 @@ export class WaveformComponent implements OnInit, AfterViewInit {
   peaks$: Observable<number[]>;
   @Input() sermonId: number;
   @Input() height: number;
-  @Input() maxNumberOfPeaks: number;
+  @Input() maxHeight: number;
+  @Input() maxNumberOfPeaks?: number;
   spinnerId: string = '';
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -46,9 +47,12 @@ export class WaveformComponent implements OnInit, AfterViewInit {
           peaks = utilities.reduceWaveform(result, this.maxNumberOfPeaks);
         }
 
-        //Convert to percents.
+        //Convert to percents - use relative height to make better use of space.
         peaks = peaks.map(val => val * 100);
-        this.peakWidth = (100/peaks.length) - utilities.peakGutterPercent;
+        let max = Math.max(...peaks)
+        let adjustment = 100 - max - 5;
+        peaks = peaks.map(peak => peak += (adjustment * (peak/max)));
+        this.peakWidth = Math.max((100/peaks.length) - utilities.peakGutterPercent, 0);
         return peaks;
       }),
       catchError(() => {

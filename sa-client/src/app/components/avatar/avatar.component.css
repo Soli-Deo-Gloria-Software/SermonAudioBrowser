@@ -1,0 +1,36 @@
+.avatar-container {
+    position: relative;
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+}
+
+.avatar-container.lg {
+    width: 150px;
+    height: 150px;
+}
+
+.avatar-container.sm {
+    width: 45px;
+    height: 45px;
+}
+
+.avatar-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.avatar-content > img,
+.avatar-content > span {
+    display: flex;
+    text-align: center;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    overflow: hidden;
+}
+
+.avatar-background {
+    z-index: 1;
+}
