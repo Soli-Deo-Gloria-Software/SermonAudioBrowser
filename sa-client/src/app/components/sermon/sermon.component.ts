@@ -4,7 +4,7 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-brows
 import { ScriptureService } from 'src/app/services/scripture.service';
 import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BibleParser } from '@soli-deo-gloria-software/bible-reference-finder';
+import { BibleParser } from '@Soli-Deo-Gloria-Software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 import * as AvatarSize from 'src/app/models/enums/avatar-size'
 
