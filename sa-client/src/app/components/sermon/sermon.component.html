@@ -17,7 +17,8 @@
             <a *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon.series?.title}}</a>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12" style="position: relative">
+        <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
         <div class="row" *ngIf="!showAudio && !showVideo">
             <div class="col">
                 <div class="position-absolute w-100" style="z-index:1000;">
@@ -32,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <app-waveform [sermonId]="sermon.sermonID" height="80" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks"></app-waveform>
+                <app-waveform [sermonId]="sermon.sermonID" height="80" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks" (loadingChange)="loadingChange($event)"></app-waveform>
             </div>
         </div>
         <div class="row" *ngIf="showAudio">
@@ -47,7 +48,6 @@
         </div>
         <div class="row" *ngIf="showDescription">
             <div class="col-12 col-md-6">
-                <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
                 <select name="ddlScripture" id="ddlScripture" class="form-select" *ngIf="showScriptureDropDown" [(ngModel)]="esvIndex" (change)="scriptureChanged()">
                     <option [value]="i" *ngFor="let reference of esvResponse.passage_meta; let i=index;">{{reference.canonical}}</option>
                 </select>

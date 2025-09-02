@@ -35,10 +35,10 @@ export class SermonComponent implements OnInit {
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
-    this.spinnerId = randomString();
   }
 
   ngOnInit(): void {
+    this.spinnerId = randomString();
     this.sermonAudioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/a/${this.sermon.sermonID}/`);
     if (this.sermon.media.video.length > 0)
     {
@@ -84,7 +84,7 @@ export class SermonComponent implements OnInit {
       }
   
       if (!this.scriptureHtml && bibleRefs) {
-        this._spinner.show(this.spinnerId);
+        this.loadingChange(true);
         this._scriptureService.GetScripture(bibleRefs).subscribe(result => {
           this.esvResponse = result;
           this.showScriptureDropDown = this.esvResponse.passage_meta.length > 1;
@@ -94,7 +94,7 @@ export class SermonComponent implements OnInit {
             this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(result.passages[0]);
           }
         }, error => console.log(error))
-        .add(() => this._spinner.hide(this.spinnerId));
+        .add(() => this.loadingChange(false));
       }
     }
   }
@@ -111,5 +111,13 @@ export class SermonComponent implements OnInit {
   {
     console.log('speaker select clicked')
     this.speakerSelected.emit(this.sermon.speaker.displayName);
+  }
+
+  loadingChange(showSpinner: boolean){
+    if (showSpinner){
+      this._spinner.show(this.spinnerId);
+    } else {
+      this._spinner.hide(this.spinnerId);
+    }
   }
 }
