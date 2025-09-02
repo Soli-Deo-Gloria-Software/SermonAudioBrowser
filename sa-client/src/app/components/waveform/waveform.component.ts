@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, map, takeUntil, tap } from 'rxjs/operators';
@@ -17,14 +17,13 @@ export class WaveformComponent implements OnInit, AfterViewInit {
   @Input() height: number;
   @Input() maxHeight: number;
   @Input() maxNumberOfPeaks?: number;
-  spinnerId: string = '';
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
+  @Output() loadingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   peakWidth:number;
-  constructor(private _sermonAudioClient: SermonAudioServiceService, private _spinner: NgxSpinnerService) { }
+  constructor(private _sermonAudioClient: SermonAudioServiceService) { }
 
   ngOnInit(): void {
-    this.spinnerId = utilities.randomString();
   }
 
   ngOnDestroy(): void {
@@ -34,7 +33,7 @@ export class WaveformComponent implements OnInit, AfterViewInit {
    }
 
   ngAfterViewInit(): void {
-    this._spinner.show(this.spinnerId);
+    this.loadingChange.emit(true);
     this.peaks$ = this._sermonAudioClient.downloadWaveform(this.sermonId).pipe( 
       takeUntil(this.ngUnsubscribe),
       map(result => {
@@ -62,7 +61,7 @@ export class WaveformComponent implements OnInit, AfterViewInit {
       }),
       tap(() => 
       {
-        this._spinner.hide(this.spinnerId);
+        this.loadingChange.emit(false);
       })
     );
   }
