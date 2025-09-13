@@ -11,8 +11,13 @@ import { FormsModule } from '@angular/forms';
 import { WaveformComponent } from './components/waveform/waveform.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AvatarComponent } from './components/avatar/avatar.component';
+
+const routes: Routes = [
+      { path: 'sermon/:id', component: SermonComponent },
+      { path: '**', component: SermonListComponent },
+    ];
 
 @NgModule({ declarations: [
         AppComponent,
@@ -26,6 +31,6 @@ import { AvatarComponent } from './components/avatar/avatar.component';
         BrowserAnimationsModule,
         NgbModule,
         FormsModule,
-        RouterModule.forRoot([]),
+        RouterModule.forRoot(routes),
         NgxSpinnerModule.forRoot({ type: 'line-scale' })], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
