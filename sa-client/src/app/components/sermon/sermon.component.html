@@ -26,8 +26,8 @@
                         <div class="row d-flex justify-content-center">
                             <div class="col">
                                 <div class="text-center me-4">
-                                    <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true">Listen</button>
-                                    <button class="btn btn-primary px-4 o-80" (click)="showVideo = true" *ngIf="hasVideo">Watch</button>
+                                    <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true"><i class="bi bi-headphones"></i> &nbsp; <span class="d-none d-md-inline">Listen</span></button>
+                                    <button class="btn btn-primary px-4 o-80" (click)="showVideo = true" *ngIf="hasVideo"><i class="bi bi-tv"></i> &nbsp; <span class="d-none d-md-inline">Watch</span></button>
                                 </div>
                             </div>
                         </div>
