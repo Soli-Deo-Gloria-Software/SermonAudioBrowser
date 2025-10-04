@@ -47,10 +47,9 @@ export class WaveformComponent implements OnInit, AfterViewInit {
         }
 
         //Convert to percents - use relative height to make better use of space.
-        peaks = peaks.map(val => val * 100);
         let max = Math.max(...peaks)
-        let adjustment = 100 - max - 5;
-        peaks = peaks.map(peak => peak += (adjustment * (peak/max)));
+        let adjustment = 1 - max - .005;
+        peaks = peaks.map(peak => peak = (peak + (adjustment * (peak/max))) * 100);
         this.peakWidth = Math.max((100/peaks.length) - utilities.peakGutterPercent, 0);
         return peaks;
       }),

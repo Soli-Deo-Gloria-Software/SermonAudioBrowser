@@ -36,6 +36,7 @@ export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks?: nu
           reduced.push(sum);
         }
       }
+      oldArray = null;
     }
     return reduced;
   }
