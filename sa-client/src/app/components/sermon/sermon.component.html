@@ -55,7 +55,7 @@
             </div>
             <div class="col-12 col-md-6" *ngIf="sermon.moreInfoText">
                 <h3>Description</h3>
-                <p *ngFor="let chunk of descriptionChunks">{{chunk}}</p>
+                <p *ngFor="let chunk of descriptionChunks" [innerHTML]="chunk"></p>
             </div>
         </div>
     </div>

@@ -30,7 +30,7 @@ export class SermonComponent implements OnInit {
   esvResponse: EsvResponse;
   esvIndex: number = 0;
   showScriptureDropDown: boolean = false;
-  descriptionChunks: string[] = [];
+  descriptionChunks: SafeHtml[] = [];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
@@ -69,18 +69,20 @@ export class SermonComponent implements OnInit {
     let bibleRefs = this.sermon.bibleText;
 
     if (this.showDescription){
-      if (this.sermon.moreInfoText)
+      if (this.sermon.moreInfoText && (!this.descriptionChunks || this.descriptionChunks.length == 0))
       {
+        let textCopy = this.sermon.moreInfoText;
         let parsed = this.bibleParser.parse(this.sermon.moreInfoText);
         if (parsed && parsed.length > 0){
           parsed.forEach(hit => {
             hit.BibleReferences.forEach(ref => {
               bibleRefs += `; ${ref.Canonical}`
             })
+            textCopy = textCopy.replace(hit.ProcessedText, `<a href="#" class="clickable" (click)="scriptureChangeByText('${hit.ProcessedText}')">${hit.ProcessedText}</a>`)
           })
         }
 
-        this.descriptionChunks = this.sermon.moreInfoText.split('\n').filter(chunk => chunk);
+        this.descriptionChunks = textCopy.split('\n').filter(chunk => this.sanitizer.bypassSecurityTrustHtml(chunk));
       }
   
       if (!this.scriptureHtml && bibleRefs) {
