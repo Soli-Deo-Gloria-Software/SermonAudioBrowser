@@ -76,9 +76,9 @@ export class SermonComponent implements OnInit {
         if (parsed && parsed.length > 0){
           parsed.forEach(hit => {
             hit.BibleReferences.forEach(ref => {
-              bibleRefs += `; ${ref.Canonical}`
+              bibleRefs += `; ${ref.Canonical}`;
+              textCopy = textCopy.replace(ref.ParsedText, `<a href="#" class="clickable" (onclick)="scriptureChangeByText('${ref.Canonical}')">${ref.ParsedText}</a>`)
             })
-            textCopy = textCopy.replace(hit.ProcessedText, `<a href="#" class="clickable" (click)="scriptureChangeByText('${hit.ProcessedText}')">${hit.ProcessedText}</a>`)
           })
         }
 
