@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BibleParser } from '@Soli-Deo-Gloria-Software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 import * as AvatarSize from 'src/app/models/enums/avatar-size'
+import { DescriptionChunk } from 'src/app/models/description-chunk.model';
 
 @Component({
   selector: 'app-sermon',
@@ -30,7 +31,7 @@ export class SermonComponent implements OnInit {
   esvResponse: EsvResponse;
   esvIndex: number = 0;
   showScriptureDropDown: boolean = false;
-  descriptionChunks: SafeHtml[] = [];
+  descriptionChunks: [DescriptionChunk[]];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
@@ -69,20 +70,32 @@ export class SermonComponent implements OnInit {
     let bibleRefs = this.sermon.bibleText;
 
     if (this.showDescription){
-      if (this.sermon.moreInfoText && (!this.descriptionChunks || this.descriptionChunks.length == 0))
+      if (this.sermon.moreInfoText && (!this.descriptionChunks || this.descriptionChunks[0].length == 0))
       {
-        let textCopy = this.sermon.moreInfoText;
+        this.descriptionChunks = [[]];
+        let paragraphs = this.sermon.moreInfoText.split('\n').filter(text => text);
         let parsed = this.bibleParser.parse(this.sermon.moreInfoText);
-        if (parsed && parsed.length > 0){
-          parsed.forEach(hit => {
-            hit.BibleReferences.forEach(ref => {
-              bibleRefs += `; ${ref.Canonical}`;
-              textCopy = textCopy.replace(ref.ParsedText, `<a href="#" class="clickable" (onclick)="scriptureChangeByText('${ref.Canonical}')">${ref.ParsedText}</a>`)
+        paragraphs.forEach(paragraph => {
+          if (parsed && parsed.length > 0){
+            let chunks: DescriptionChunk[] = [];
+            parsed.forEach(hit => {
+              let currentIndex = 0;
+              hit.BibleReferences.forEach(ref => {
+                if (!bibleRefs.includes(ref.Canonical)){
+                  bibleRefs += `; ${ref.Canonical}`;
+                }
+                let startIndex = paragraph.indexOf(ref.ParsedText, currentIndex);
+                let textBefore = paragraph.substring(currentIndex, startIndex);
+                currentIndex = startIndex + ref.ParsedText.length;
+                chunks.push({Text: textBefore, CanonicalBibleReference: undefined});
+                chunks.push({Text: ref.ParsedText, CanonicalBibleReference: ref.Canonical});
+                this.descriptionChunks.push(chunks);
+              })
             })
-          })
-        }
-
-        this.descriptionChunks = textCopy.split('\n').filter(chunk => this.sanitizer.bypassSecurityTrustHtml(chunk));
+          } else {
+            this.descriptionChunks.push([{Text: paragraph, CanonicalBibleReference: undefined}])
+          }
+        })
       }
   
       if (!this.scriptureHtml && bibleRefs) {
@@ -101,7 +114,11 @@ export class SermonComponent implements OnInit {
     }
   }
 
-  scriptureChanged(){
+  scriptureChanged(canonical?: string){
+    if (canonical){
+      this.esvIndex = this.esvResponse.passage_meta.findIndex(meta => meta.canonical === canonical); //Note: broken
+    }
+
     this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[this.esvIndex]);
   }
 

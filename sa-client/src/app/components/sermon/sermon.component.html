@@ -55,7 +55,12 @@
             </div>
             <div class="col-12 col-md-6" *ngIf="sermon.moreInfoText">
                 <h3>Description</h3>
-                <p *ngFor="let chunk of descriptionChunks" [innerHTML]="chunk"></p>
+                <p *ngFor="let chunk of descriptionChunks">
+                    <span *ngFor="let segment of chunk">
+                        <span *ngIf="segment.CanonicalBibleReference == undefined">{{segment.Text}}</span>
+                        <span class="clickable" *ngIf="segment.CanonicalBibleReference != undefined" (click)="scriptureChanged(segment.CanonicalBibleReference)">{{segment.Text}}</span>
+                    </span>
+                </p>
             </div>
         </div>
     </div>
