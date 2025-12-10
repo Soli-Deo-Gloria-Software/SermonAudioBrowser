@@ -51,7 +51,7 @@ export class SermonComponent implements OnInit {
   }
 
   computePeakCount(innerWidth: number): number{
-    let peaks:number = 1000;
+    let peaks:number = 900;
     if (innerWidth <= 576){
       peaks = 150;
     } else if (innerWidth <= 768){
@@ -116,7 +116,22 @@ export class SermonComponent implements OnInit {
 
   scriptureChanged(canonical?: string){
     if (canonical){
-      this.esvIndex = this.esvResponse.passage_meta.findIndex(meta => meta.canonical === canonical); //Note: broken
+      let index = -1;
+
+      canonical = canonical.toLowerCase();
+      this.esvResponse.passage_meta.forEach((meta) => {
+        index++;
+
+        let metaCanonical = meta.canonical.toLocaleLowerCase().replace(/^[\w\-\s]+$/, '');
+        metaCanonical = encodeURIComponent(metaCanonical);
+        metaCanonical = metaCanonical.replace('%E2%80%93', '-'); // esv api uses a strange encoding - have to manually replace the odd dash.
+        metaCanonical = decodeURIComponent(metaCanonical);
+        console.log(`comparing ${metaCanonical} and ${canonical}`);
+        if (metaCanonical == canonical){
+          this.esvIndex = index;
+          return;
+        }
+      })
     }
 
     this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[this.esvIndex]);
