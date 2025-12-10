@@ -76,6 +76,7 @@ export class SermonComponent implements OnInit {
         let paragraphs = this.sermon.moreInfoText.split('\n').filter(text => text);
         let parsed = this.bibleParser.parse(this.sermon.moreInfoText);
         paragraphs.forEach(paragraph => {
+          let hitFound = false;
           if (parsed && parsed.length > 0){
             let chunks: DescriptionChunk[] = [];
             parsed.forEach(hit => {
@@ -84,18 +85,24 @@ export class SermonComponent implements OnInit {
                 if (!bibleRefs.includes(ref.Canonical)){
                   bibleRefs += `; ${ref.Canonical}`;
                 }
-                let startIndex = paragraph.indexOf(ref.ParsedText, currentIndex);
-                let textBefore = paragraph.substring(currentIndex, startIndex);
-                currentIndex = startIndex + ref.ParsedText.length;
-                chunks.push({Text: textBefore, CanonicalBibleReference: undefined});
-                chunks.push({Text: ref.ParsedText, CanonicalBibleReference: ref.Canonical});
-                this.descriptionChunks.push(chunks);
+                if (paragraph.includes(ref.ParsedText)) {
+                  hitFound = true;
+                  let startIndex = paragraph.indexOf(ref.ParsedText, currentIndex);
+                  let textBefore = paragraph.substring(currentIndex, startIndex);
+                  currentIndex = startIndex + ref.ParsedText.length;
+                  chunks.push({Text: textBefore, CanonicalBibleReference: undefined});
+                  chunks.push({Text: ref.ParsedText, CanonicalBibleReference: ref.Canonical});
+                  this.descriptionChunks.push(chunks);
+                }
               })
             })
-          } else {
+          }
+
+          if (!hitFound) {
             this.descriptionChunks.push([{Text: paragraph, CanonicalBibleReference: undefined}])
           }
-        })
+        });
+        
       }
   
       if (!this.scriptureHtml && bibleRefs) {
