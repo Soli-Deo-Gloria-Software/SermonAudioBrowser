@@ -16,7 +16,7 @@ export class ScriptureService {
 
   public GetScripture(query: string): Observable<EsvResponse> {
     let params: HttpParams = new HttpParams();
-    params = params.append("q", query);
+    params = params.append("q", query).append("include-passage-references", false);
     return this._httpClient.get<any>(`${this._baseUrl}/search`, { params: params }).pipe(
       map(results => {
         if (results.body) {

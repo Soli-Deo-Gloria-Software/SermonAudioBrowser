@@ -48,9 +48,7 @@
         </div>
         <div class="row" *ngIf="showDescription">
             <div class="col-12 col-md-6">
-                <select name="ddlScripture" id="ddlScripture" class="form-select" *ngIf="showScriptureDropDown" [(ngModel)]="esvIndex" (change)="scriptureChanged()">
-                    <option [value]="i" *ngFor="let reference of esvResponse.passage_meta; let i=index;">{{reference.canonical}}</option>
-                </select>
+                <app-scripture-display [scriptureHtml]="scriptureHtml" [parsed]="scriptureAudioIndexes" [reference]="scriptureReference"></app-scripture-display>
                 <div [innerHTML]="scriptureHtml"></div>
             </div>
             <div class="col-12 col-md-6" *ngIf="sermon.moreInfoText">
@@ -58,10 +56,14 @@
                 <p *ngFor="let chunk of descriptionChunks">
                     <span *ngFor="let segment of chunk">
                         <span *ngIf="segment.CanonicalBibleReference == undefined">{{segment.Text}}</span>
-                        <span class="clickable" *ngIf="segment.CanonicalBibleReference != undefined" (click)="scriptureChanged(segment.CanonicalBibleReference)">{{segment.Text}}</span>
+                        <span class="clickable" *ngIf="segment.CanonicalBibleReference != undefined" (click)="scriptureChanged(segment.CanonicalBibleReference)" [ngbTooltip]="scriptureToolTip" [openDelay]="200" [closeDelay]="1000" triggers="click:blur" tooltipClass="tooltip-override">{{segment.Text}}</span>
                     </span>
                 </p>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #scriptureToolTip>
+    <app-scripture-display [scriptureHtml]="toolTipScripture" [parsed]="toolTipIndexes" [reference]="toolTipReference"></app-scripture-display>
+</ng-template>

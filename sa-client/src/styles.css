@@ -128,3 +128,50 @@ a:hover{
         margin-top: 2em !important;
     }
 }
+
+.audio.extra_text{
+    visibility: hidden;
+}
+
+.audio.extra_text::before {
+    font-family: "bootstrap-icons !important";
+    content: "\F3A5";
+    visibility: visible;
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: -.125em;
+    -webkit-font-smoothing: antialiased;
+}
+
+.tooltip-override .tooltip-inner {
+    background-color: lightgray;
+    font-size: 80%;
+    max-width: 100vw;
+    width: 500px;
+    color: black;
+}
+
+.tooltip-override.show {
+    opacity: 0.95;
+}
+
+.tooltip-override.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: lightgray;
+}
+
+.tooltip-override.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: lightgray;
+}
+
+.tooltip-override.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: lightgray;
+}
+
+.tooltip-override.bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: lightgray;
+}

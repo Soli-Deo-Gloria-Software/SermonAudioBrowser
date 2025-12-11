@@ -27,14 +27,17 @@ export class SermonComponent implements OnInit {
   showAudio: boolean = false;
   showDescription: boolean = false;
   scriptureHtml: SafeHtml;
+  scriptureReference: string;
+  scriptureAudioIndexes: number[];
   spinnerId: string = '';
   esvResponse: EsvResponse;
-  esvIndex: number = 0;
-  showScriptureDropDown: boolean = false;
   descriptionChunks: [DescriptionChunk[]];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
+  toolTipScripture: SafeHtml;
+  toolTipReference: string;
+  toolTipIndexes: number[];
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
   }
 
@@ -65,7 +68,7 @@ export class SermonComponent implements OnInit {
     return peaks;
   }
 
-  toggleDescription(){
+  toggleDescription(){ //TODO: optimize
     this.showDescription = !this.showDescription;
     let bibleRefs = this.sermon.bibleText;
 
@@ -109,11 +112,13 @@ export class SermonComponent implements OnInit {
         this.loadingChange(true);
         this._scriptureService.GetScripture(bibleRefs).subscribe(result => {
           this.esvResponse = result;
-          this.showScriptureDropDown = this.esvResponse.passage_meta.length > 1;
 
           console.log(result);
           if (result.passages){
+            let refs = this.bibleParser.parse(bibleRefs);
             this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(result.passages[0]);
+            this.scriptureAudioIndexes = result.parsed[0];
+            this.scriptureReference = refs[0].BibleReferences[0].Canonical;
           }
         }, error => console.log(error))
         .add(() => this.loadingChange(false));
@@ -121,8 +126,9 @@ export class SermonComponent implements OnInit {
     }
   }
 
-  scriptureChanged(canonical?: string){
+  scriptureChanged(canonical: string){
     if (canonical){
+      this.toolTipReference = canonical;
       let index = -1;
 
       canonical = canonical.toLowerCase();
@@ -135,21 +141,21 @@ export class SermonComponent implements OnInit {
         metaCanonical = decodeURIComponent(metaCanonical);
         console.log(`comparing ${metaCanonical} and ${canonical}`);
         if (metaCanonical == canonical){
-          this.esvIndex = index;
+          this.toolTipScripture = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[index]);
+          this.toolTipIndexes = this.esvResponse.parsed[index];
           return;
         }
       })
+    } else {
+      this.toolTipScripture = "Error!"
     }
-
-    this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[this.esvIndex]);
   }
 
   selectSeries(seriesID: number){
     this.seriesSelected.emit(seriesID);
   }
 
-  selectSpeaker()
-  {
+  selectSpeaker() {
     console.log('speaker select clicked')
     this.speakerSelected.emit(this.sermon.speaker.displayName);
   }
