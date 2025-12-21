@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { EsvPassageMetadata } from 'src/app/models/Esv/esv-passage-metadata.model';
 
@@ -7,7 +7,7 @@ import { EsvPassageMetadata } from 'src/app/models/Esv/esv-passage-metadata.mode
   templateUrl: './scripture-display.component.html',
   standalone: false
 })
-export class ScriptureDisplayComponent implements AfterViewInit {
+export class ScriptureDisplayComponent implements OnInit {
   @Input() reference: string;
   @Input() parsed: number[];
   @Input() scriptureHtml: SafeHtml;
@@ -16,8 +16,8 @@ export class ScriptureDisplayComponent implements AfterViewInit {
   }
 
   audioLink: SafeResourceUrl = '';
-  ngAfterViewInit():void {
-    if (this.parsed.length == 2){
+  ngOnInit():void {
+    if (this.parsed && this.parsed.length == 2){
       let startIndex = this.parsed[0];
       let endIndex = this.parsed[1];
       let src = `https://audio.esv.org/david-cochran-heath/mq/${startIndex}-${endIndex}.mp3`;

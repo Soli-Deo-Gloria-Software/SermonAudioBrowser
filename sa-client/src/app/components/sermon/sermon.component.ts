@@ -54,7 +54,7 @@ export class SermonComponent implements OnInit {
   }
 
   computePeakCount(innerWidth: number): number{
-    let peaks:number = 900;
+    let peaks:number = 850;
     if (innerWidth <= 576){
       peaks = 150;
     } else if (innerWidth <= 768){
@@ -69,10 +69,10 @@ export class SermonComponent implements OnInit {
   }
 
   toggleDescription(){ //TODO: optimize
-    this.showDescription = !this.showDescription;
+    let showDescription = !this.showDescription;
     let bibleRefs = this.sermon.bibleText;
 
-    if (this.showDescription){
+    if (showDescription){
       if (this.sermon.moreInfoText && (!this.descriptionChunks || this.descriptionChunks[0].length == 0))
       {
         this.descriptionChunks = [[]];
@@ -121,7 +121,10 @@ export class SermonComponent implements OnInit {
             this.scriptureReference = refs[0].BibleReferences[0].Canonical;
           }
         }, error => console.log(error))
-        .add(() => this.loadingChange(false));
+        .add(() => {
+          this.showDescription = showDescription;
+          this.loadingChange(false)
+        });
       }
     }
   }
@@ -139,7 +142,6 @@ export class SermonComponent implements OnInit {
         metaCanonical = encodeURIComponent(metaCanonical);
         metaCanonical = metaCanonical.replace('%E2%80%93', '-'); // esv api uses a strange encoding - have to manually replace the odd dash.
         metaCanonical = decodeURIComponent(metaCanonical);
-        console.log(`comparing ${metaCanonical} and ${canonical}`);
         if (metaCanonical == canonical){
           this.toolTipScripture = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[index]);
           this.toolTipIndexes = this.esvResponse.parsed[index];
