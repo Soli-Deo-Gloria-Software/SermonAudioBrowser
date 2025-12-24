@@ -11,6 +11,7 @@ export class ScriptureDisplayComponent implements OnInit {
   @Input() reference: string;
   @Input() parsed: number[];
   @Input() scriptureHtml: SafeHtml;
+  showAudio: boolean = false;
 
   constructor(private _sanitizer: DomSanitizer) {
   }

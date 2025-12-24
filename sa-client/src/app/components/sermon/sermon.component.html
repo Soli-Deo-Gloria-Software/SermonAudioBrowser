@@ -56,7 +56,19 @@
                 <p *ngFor="let chunk of descriptionChunks">
                     <span *ngFor="let segment of chunk">
                         <span *ngIf="segment.CanonicalBibleReference == undefined">{{segment.Text}}</span>
-                        <span class="clickable" *ngIf="segment.CanonicalBibleReference != undefined" (click)="scriptureChanged(segment.CanonicalBibleReference)" [ngbTooltip]="scriptureToolTip" [openDelay]="200" [closeDelay]="1000" triggers="click:blur" tooltipClass="tooltip-override">{{segment.Text}}</span>
+                        <span 
+                            class="clickable"
+                            *ngIf="segment.CanonicalBibleReference != undefined"
+                            (click)="scriptureChanged(segment.CanonicalBibleReference); toggler.toggle()"
+                            [ngbTooltip]="scriptureToolTip"
+                            [openDelay]="200"
+                            [closeDelay]="1000"
+                            [autoClose]="'outside'"
+                            triggers="manual:blur"
+                            tooltipClass="tooltip-override"
+                            #toggler="ngbTooltip">
+                                {{segment.Text}}
+                        </span>
                     </span>
                 </p>
             </div>
