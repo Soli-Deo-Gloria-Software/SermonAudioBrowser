@@ -3,7 +3,7 @@
         <div class="col d-flex">
             <div *ngFor="let peak of peaks$ | async" class="mx-auto h-100" [style.width.%]="peakWidth">
                 <div class="h-100 d-flex">
-                    <div class="waveform-peak float-start bg-secondary my-auto w-100" [style.height.%]="peak" ></div>
+                    <div class="waveform-peak float-start my-auto w-100" [style.height.%]="peak" ></div>
                 </div>
             </div>
         </div>

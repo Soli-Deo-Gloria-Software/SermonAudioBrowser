@@ -15,9 +15,10 @@ app-sermon + app-sermon{
     text-decoration: underline;
 }
 
+
 .waveform-peak{
     display: inline-block;
-    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 75%, transparent 100%);
+    background: linear-gradient(to bottom, transparent 0%, black 5%, black 48%, transparent 50%, grey 52%, grey 70%, transparent 75%);
 }
 
 div[class^="o-"], div[class*=" o-"],
