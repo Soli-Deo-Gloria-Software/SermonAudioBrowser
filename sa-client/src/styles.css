@@ -176,3 +176,8 @@ a:hover{
 .tooltip-override.bs-tooltip-bottom .tooltip-arrow::before {
     border-bottom-color: lightgray;
 }
+
+.scriptureDisplay {
+    max-height: 95vh !important;
+    overflow-y: auto;
+}

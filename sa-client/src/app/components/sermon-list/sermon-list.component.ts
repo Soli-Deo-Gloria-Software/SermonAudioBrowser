@@ -52,7 +52,6 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     )
     .subscribe({
       next: query => {
-        console.log(query)
         let speaker = query.get('speaker');
         let series = query.get('series');
         let sermonId = query.get('sermonId');

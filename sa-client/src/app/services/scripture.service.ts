@@ -21,6 +21,11 @@ export class ScriptureService {
       map(results => {
         if (results.body) {
           let response: EsvResponse = JSON.parse(results.body)
+          response.passage_meta.forEach(meta => {
+            let encoded = encodeURIComponent(meta.canonical);
+            encoded = encoded.replace('%E2%80%93', '-') // Handle special dash.
+            meta.canonical = decodeURIComponent(encoded);
+          })
           return response;
         }
 

@@ -1,2 +1,4 @@
-<h2>{{reference}} <i class="bi bi-file-earmark-music" title="Listen" *ngIf="!showAudio" (click)="showAudio = true;"></i> <audio *ngIf="showAudio" controls [src]="audioLink" style="height: 1em" class="pt-2"></audio></h2>
-<div [innerHtml]="scriptureHtml"></div>
+<div class="scriptureDisplay">
+    <h2>{{reference}} <i class="bi bi-file-earmark-music" title="Listen" *ngIf="!showAudio" (click)="showAudio = true;"></i> <audio *ngIf="showAudio" controls [src]="audioLink" style="height: 1em" class="pt-2"></audio></h2>
+    <div [innerHtml]="scriptureHtml"></div>
+</div>
