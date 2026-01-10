@@ -1,11 +1,13 @@
 <div [style.height.px]="height" [style.maxHeight.vh]="maxHeight" class="o-70">
-    <div class="row h-100">
-        <div class="col d-flex">
-            <div *ngFor="let peak of peaks$ | async" class="mx-auto h-100" [style.width.%]="peakWidth">
-                <div class="h-100 d-flex">
-                    <div class="waveform-peak float-start my-auto w-100" [style.height.%]="peak" ></div>
-                </div>
-            </div>
+  <div class="row h-100">
+    <div class="col d-flex">
+      @for (peak of peaks$ | async; track peak) {
+        <div class="mx-auto h-100" [style.width.%]="peakWidth">
+          <div class="h-100 d-flex">
+            <div class="waveform-peak float-start my-auto w-100" [style.height.%]="peak" ></div>
+          </div>
         </div>
+      }
     </div>
+  </div>
 </div>
