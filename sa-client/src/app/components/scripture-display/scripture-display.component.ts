@@ -15,14 +15,12 @@ export class ScriptureDisplayComponent implements OnInit {
 
   constructor(private _sanitizer: DomSanitizer) {
   }
-
-  audioLink: SafeResourceUrl = '';
+  unsafeAudioLink: string = '';
   ngOnInit():void {
     if (this.parsed && this.parsed.length == 2){
       let startIndex = this.parsed[0];
       let endIndex = this.parsed[1];
-      let src = `https://audio.esv.org/david-cochran-heath/mq/${startIndex}-${endIndex}.mp3`;
-      this.audioLink = this._sanitizer.bypassSecurityTrustResourceUrl(src);
+      this.unsafeAudioLink = `https://audio.esv.org/david-cochran-heath/mq/${startIndex}-${endIndex}.mp3`;
     }
   }
 }
