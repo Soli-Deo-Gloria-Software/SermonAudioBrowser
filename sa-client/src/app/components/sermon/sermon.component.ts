@@ -4,10 +4,9 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-brows
 import { ScriptureService } from 'src/app/services/scripture.service';
 import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BibleParser } from '@Soli-Deo-Gloria-Software/bible-reference-finder';
+import { BibleParser, TextParagraph } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 import * as AvatarSize from 'src/app/models/enums/avatar-size'
-import { DescriptionChunk } from 'src/app/models/description-chunk.model';
 
 @Component({
   selector: 'app-sermon',
@@ -28,7 +27,7 @@ export class SermonComponent implements OnInit {
   showDescription: boolean = false;
   spinnerId: string = '';
   esvResponse: EsvResponse;
-  descriptionChunks: DescriptionChunk[][];
+  descriptionParagraphs: TextParagraph[];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
@@ -69,17 +68,23 @@ export class SermonComponent implements OnInit {
     this.showDescription = !this.showDescription;
     let bibleRefs = '';
 
-    if (!this.descriptionChunks || this.descriptionChunks.length == 0)
+    if (!this.descriptionParagraphs || this.descriptionParagraphs.length == 0)
     {
-      this.sermon.moreInfoText = `Scripture: ${this.sermon.bibleText}\n${this.sermon.moreInfoText}`;
-      this.descriptionChunks = [[]];
-      let paragraphs = this.sermon.moreInfoText.split('\n').filter(text => text);
-      let parsed = this.bibleParser.parse(this.sermon.moreInfoText);
-      parsed.forEach(hit => hit.BibleReferences.forEach(ref => {
-        if (!bibleRefs.includes(ref.Canonical)){
-          bibleRefs += `${ref.Canonical}; `;
-        }
-      }))
+      if (this.sermon.moreInfoText) {
+        this.sermon.moreInfoText = `Scripture: ${this.sermon.bibleText}\n${this.sermon.moreInfoText}`;
+      } else {
+        this.sermon.moreInfoText = `Scripture: ${this.sermon.bibleText}`;
+      }
+
+      let parseResult = this.bibleParser.parseAndSplit(this.sermon.moreInfoText);
+      this.descriptionParagraphs = parseResult.Paragraphs;
+      parseResult.Paragraphs.forEach(paragraph => {
+        paragraph.Segments.forEach(segment => {
+          if (segment.Reference?.Canonical && !bibleRefs.includes(segment.Reference.Canonical)) {
+            bibleRefs += `${segment.Reference.Canonical}; `;
+          }
+        })
+      })
 
       bibleRefs = bibleRefs.substring(0, Math.max(0, bibleRefs.length-2));
 
@@ -92,52 +97,6 @@ export class SermonComponent implements OnInit {
           this.loadingChange(false)
         });
       }
-
-      paragraphs.forEach(paragraph => {
-        let hitFound = false;
-        if (parsed && parsed.length > 0){
-          let chunks: DescriptionChunk[] = [];
-          parsed.forEach(hit => {
-            let currentIndex = 0;
-            if (hit.BibleReferences.length == 1){
-              if (paragraph.includes(hit.ProcessedText))
-              {
-                hitFound = true;
-                  let startIndex = paragraph.indexOf(hit.ProcessedText, currentIndex);
-                  let textBefore = paragraph.substring(currentIndex, startIndex);
-                  currentIndex = startIndex + hit.ProcessedText.length;
-                  if (textBefore) {
-                    chunks.push({Text: textBefore, CanonicalBibleReference: undefined});
-                  }
-                  chunks.push({Text: hit.ProcessedText, CanonicalBibleReference: hit.BibleReferences[0].Canonical});
-                  this.descriptionChunks.push([...chunks]);
-              }
-            }
-            else {
-              hit.BibleReferences.forEach(ref => {
-                if (!bibleRefs.includes(ref.Canonical)){
-                  bibleRefs += `; ${ref.Canonical}`;
-                }
-                if (paragraph.includes(ref.ParsedText)) {
-                  hitFound = true;
-                  let startIndex = paragraph.indexOf(ref.ParsedText, currentIndex);
-                  let textBefore = paragraph.substring(currentIndex, startIndex);
-                  currentIndex = startIndex + ref.ParsedText.length;
-                  if (textBefore) {
-                    chunks.push({Text: textBefore, CanonicalBibleReference: undefined});
-                  }
-                  chunks.push({Text: ref.ParsedText, CanonicalBibleReference: ref.Canonical});
-                  this.descriptionChunks.push([...chunks]);
-                }
-              })
-            }
-          })
-        }
-
-        if (!hitFound) {
-          this.descriptionChunks.push([{Text: paragraph, CanonicalBibleReference: undefined}])
-        }
-      });
     }
   }
 

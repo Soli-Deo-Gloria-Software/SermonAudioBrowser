@@ -27,17 +27,17 @@
       <div class="row">
         @if (sermon.moreInfoText) {
           <div class="col">
-            @for (chunk of descriptionChunks; track chunk) {
+            @for (paragraph of descriptionParagraphs; track paragraph) {
               <p>
-                @for (segment of chunk; track segment) {
+                @for (segment of paragraph.Segments; track segment) {
                   <span>
-                    @if (segment.CanonicalBibleReference == undefined) {
+                    @if (segment.Reference == undefined) {
                       <span>{{segment.Text}}</span>
                     }
-                    @if (segment.CanonicalBibleReference != undefined) {
+                    @if (segment.Reference != undefined) {
                       <span
                         class="clickable"
-                        (click)="scriptureChanged(segment.CanonicalBibleReference); toggler.toggle()"
+                        (click)="scriptureChanged(segment.Reference.Canonical); toggler.toggle()"
                         [ngbTooltip]="scriptureToolTip"
                         [openDelay]="200"
                         [closeDelay]="1000"
