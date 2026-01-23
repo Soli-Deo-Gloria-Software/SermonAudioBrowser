@@ -6,8 +6,18 @@
       </div>
       <div class="ms-2">
         <a class="text-decoration-none">
-          @if (sermon.bibleText || sermon.moreInfoText) {
-            <h4 class="h4 clickable" (click)="toggleDescription()"><span>{{sermon.bibleText}}</span></h4>
+          @if (sermonScriptures) {
+            @for (scripture of sermonScriptures; track scripture) {
+              <span class="h4 clickable scriptureText"
+                  (click)="scriptureChanged(scripture); toggler.toggle()"
+                  [ngbTooltip]="scriptureToolTip"
+                  [openDelay]="200"
+                  [closeDelay]="1000"
+                  [autoClose]="'outside'"
+                  triggers="manual:blur"
+                  tooltipClass="tooltip-override"
+                  #toggler="ngbTooltip">{{scripture}}</span>
+            }
           }
           <h5 class="h5 o-90 clickable" (click)="toggleDescription()">
             <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i>

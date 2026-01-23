@@ -181,3 +181,11 @@ a:hover{
     max-height: 95vh !important;
     overflow-y: auto;
 }
+
+.scriptureText + .scriptureText::before {
+    content: "|";
+    color: #333;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0 0.75rem;
+}

@@ -34,6 +34,7 @@ export class SermonComponent implements OnInit {
   toolTipScripture: SafeHtml;
   toolTipReference: string;
   toolTipIndexes: number[];
+  sermonScriptures: string[] = [];
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
   }
 
@@ -47,6 +48,8 @@ export class SermonComponent implements OnInit {
     }
 
     this.maxNumberOfPeaks = this.computePeakCount(window.innerWidth);
+    let scriptures = this.sermon.bibleText?.split(";") ?? [];
+    scriptures.forEach(s => this.sermonScriptures.push(s.trim()))
   }
 
   computePeakCount(innerWidth: number): number{
