@@ -68,7 +68,10 @@ export class SermonComponent implements OnInit {
     return peaks;
   }
 
-  toggleDescription(){ //TODO: optimize
+  toggleDescription() {
+    if (!this.sermon.moreInfoText) {
+      return;
+    }
     this.showDescription = !this.showDescription;
     this.loadDescription(false);
   }
@@ -87,7 +90,7 @@ export class SermonComponent implements OnInit {
         if (index > 0) {
           this.descriptionParagraphs.push(paragraph);
         }
-        
+
         paragraph.Segments.forEach(segment => {
           if (segment.Reference?.Canonical && !this.bibleTexts.includes(segment.Reference.Canonical)) {
             this.bibleTexts.push(segment.Reference.Canonical);

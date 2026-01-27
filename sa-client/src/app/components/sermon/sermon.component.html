@@ -5,24 +5,23 @@
         <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
       </div>
       <div class="ms-2">
-        <a class="text-decoration-none">
-          @if (sermonScriptures) {
-            @for (scripture of sermonScriptures; track scripture) {
-              <span class="h4 clickable scriptureText"
-                  (click)="loadScripture(scripture); toggler.toggle()"
-                  [ngbTooltip]="scriptureToolTip"
-                  [openDelay]="200"
-                  [closeDelay]="1000"
-                  [autoClose]="'outside'"
-                  triggers="manual:blur"
-                  tooltipClass="tooltip-override"
-                  #toggler="ngbTooltip">{{scripture}}</span>
-            }
+        @if (sermonScriptures) {
+          @for (scripture of sermonScriptures; track scripture) {
+            <span class="h4 clickable scriptureText"
+                (click)="loadScripture(scripture); toggler.toggle()"
+                [ngbTooltip]="scriptureToolTip"
+                [openDelay]="200"
+                [closeDelay]="1000"
+                [autoClose]="'outside'"
+                triggers="manual:blur"
+                tooltipClass="tooltip-override"
+                #toggler="ngbTooltip">{{scripture}}</span>
           }
-          <h5 class="h5 o-90 clickable" (click)="toggleDescription()">
-            <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i>
-          </h5>
-        </a>
+        }
+        <h5 class="h5 o-90" [class.clickable]="sermon.moreInfoText" (click)="toggleDescription()">
+          <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span>
+          @if (sermon.moreInfoText) {<i class="bi bi-caret-down toggle" [class.active]="showDescription"></i> }
+        </h5>
       </div>
     </div>
     <div class="position-absolute" style="z-index:1000; bottom:0; right:0;">
