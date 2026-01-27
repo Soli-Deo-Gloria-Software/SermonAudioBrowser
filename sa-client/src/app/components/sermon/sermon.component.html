@@ -9,7 +9,7 @@
           @if (sermonScriptures) {
             @for (scripture of sermonScriptures; track scripture) {
               <span class="h4 clickable scriptureText"
-                  (click)="scriptureChanged(scripture); toggler.toggle()"
+                  (click)="loadScripture(scripture); toggler.toggle()"
                   [ngbTooltip]="scriptureToolTip"
                   [openDelay]="200"
                   [closeDelay]="1000"
@@ -47,7 +47,7 @@
                     @if (segment.Reference != undefined) {
                       <span
                         class="clickable"
-                        (click)="scriptureChanged(segment.Reference.Canonical); toggler.toggle()"
+                        (click)="loadScripture(segment.Reference.Canonical); toggler.toggle()"
                         [ngbTooltip]="scriptureToolTip"
                         [openDelay]="200"
                         [closeDelay]="1000"

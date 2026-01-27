@@ -28,6 +28,7 @@ export class SermonComponent implements OnInit {
   spinnerId: string = '';
   esvResponse: EsvResponse;
   descriptionParagraphs: TextParagraph[];
+  bibleTexts: string[] = [];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
@@ -69,41 +70,59 @@ export class SermonComponent implements OnInit {
 
   toggleDescription(){ //TODO: optimize
     this.showDescription = !this.showDescription;
-    let bibleRefs = '';
+    this.loadDescription(false);
+  }
 
+  loadDescription(skipScriptureLoad: boolean) {
     if (!this.descriptionParagraphs || this.descriptionParagraphs.length == 0)
     {
+      let parseText = `Scripture: ${this.sermon.bibleText}`;
       if (this.sermon.moreInfoText) {
-        this.sermon.moreInfoText = `Scripture: ${this.sermon.bibleText}\n${this.sermon.moreInfoText}`;
-      } else {
-        this.sermon.moreInfoText = `Scripture: ${this.sermon.bibleText}`;
+        parseText += `\n${this.sermon.moreInfoText}`;
       }
 
-      let parseResult = this.bibleParser.parseAndSplit(this.sermon.moreInfoText);
-      this.descriptionParagraphs = parseResult.Paragraphs;
-      parseResult.Paragraphs.forEach(paragraph => {
+      let parseResult = this.bibleParser.parseAndSplit(parseText);
+      this.descriptionParagraphs = [];
+      parseResult.Paragraphs.forEach((paragraph, index) => {
+        if (index > 0) {
+          this.descriptionParagraphs.push(paragraph);
+        }
+        
         paragraph.Segments.forEach(segment => {
-          if (segment.Reference?.Canonical && !bibleRefs.includes(segment.Reference.Canonical)) {
-            bibleRefs += `${segment.Reference.Canonical}; `;
+          if (segment.Reference?.Canonical && !this.bibleTexts.includes(segment.Reference.Canonical)) {
+            this.bibleTexts.push(segment.Reference.Canonical);
           }
         })
       })
+      if (!skipScriptureLoad) {
+        this.loadScripture();
+      }
+    }
+  }
 
-      bibleRefs = bibleRefs.substring(0, Math.max(0, bibleRefs.length-2));
+  loadScripture(canonical?: string) {
+    if (!this.esvResponse) {
+      if (!this.bibleTexts || this.bibleTexts.length === 0) {
+        this.loadDescription(true);
+      }
 
+      let bibleRefs = this.bibleTexts.join('; ');
       if (bibleRefs) {
         this.loadingChange(true);
         this._scriptureService.GetScripture(bibleRefs).subscribe(result => {
           this.esvResponse = result;
         }, error => console.log(error))
         .add(() => {
-          this.loadingChange(false)
+          this.loadingChange(false);
+          this.scriptureChanged(canonical);
         });
       }
+    } else {
+      this.scriptureChanged(canonical);
     }
   }
 
-  scriptureChanged(canonical: string){
+  private scriptureChanged(canonical: string){
     if (canonical){
       this.toolTipReference = canonical;
 
