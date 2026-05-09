@@ -4,7 +4,7 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-brows
 import { ScriptureService } from 'src/app/services/scripture.service';
 import { randomString } from 'src/app/utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BibleParser } from '@Soli-Deo-Gloria-Software/bible-reference-finder';
+import { BibleParser, TextParagraph } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
 import * as AvatarSize from 'src/app/models/enums/avatar-size'
 
@@ -25,15 +25,17 @@ export class SermonComponent implements OnInit {
   showVideo: boolean = false;
   showAudio: boolean = false;
   showDescription: boolean = false;
-  scriptureHtml: SafeHtml;
   spinnerId: string = '';
   esvResponse: EsvResponse;
-  esvIndex: number = 0;
-  showScriptureDropDown: boolean = false;
-  descriptionChunks: string[] = [];
+  descriptionParagraphs: TextParagraph[];
+  bibleTexts: string[] = [];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks: number;
+  toolTipScripture: SafeHtml;
+  toolTipReference: string;
+  toolTipIndexes: number[];
+  sermonScriptures: string[] = [];
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
   }
 
@@ -47,10 +49,12 @@ export class SermonComponent implements OnInit {
     }
 
     this.maxNumberOfPeaks = this.computePeakCount(window.innerWidth);
+    let scriptures = this.sermon.bibleText?.split(";") ?? [];
+    scriptures.forEach(s => this.sermonScriptures.push(s.trim()))
   }
 
   computePeakCount(innerWidth: number): number{
-    let peaks:number = 1000;
+    let peaks:number = 850;
     if (innerWidth <= 576){
       peaks = 150;
     } else if (innerWidth <= 768){
@@ -64,52 +68,84 @@ export class SermonComponent implements OnInit {
     return peaks;
   }
 
-  toggleDescription(){
+  toggleDescription() {
+    if (!this.sermon.moreInfoText) {
+      return;
+    }
     this.showDescription = !this.showDescription;
-    let bibleRefs = this.sermon.bibleText;
+    this.loadDescription(false);
+  }
 
-    if (this.showDescription){
-      if (this.sermon.moreInfoText)
-      {
-        let parsed = this.bibleParser.parse(this.sermon.moreInfoText);
-        if (parsed && parsed.length > 0){
-          parsed.forEach(hit => {
-            hit.BibleReferences.forEach(ref => {
-              bibleRefs += `; ${ref.Canonical}`
-            })
-          })
+  loadDescription(skipScriptureLoad: boolean) {
+    if (!this.descriptionParagraphs || this.descriptionParagraphs.length == 0)
+    {
+      let parseText = `Scripture: ${this.sermon.bibleText}`;
+      if (this.sermon.moreInfoText) {
+        parseText += `\n${this.sermon.moreInfoText}`;
+      }
+
+      let parseResult = this.bibleParser.parseAndSplit(parseText);
+      this.descriptionParagraphs = [];
+      parseResult.Paragraphs.forEach((paragraph, index) => {
+        if (index > 0) {
+          this.descriptionParagraphs.push(paragraph);
         }
 
-        this.descriptionChunks = this.sermon.moreInfoText.split('\n').filter(chunk => chunk);
-      }
-  
-      if (!this.scriptureHtml && bibleRefs) {
-        this.loadingChange(true);
-        this._scriptureService.GetScripture(bibleRefs).subscribe(result => {
-          this.esvResponse = result;
-          this.showScriptureDropDown = this.esvResponse.passage_meta.length > 1;
-
-          console.log(result);
-          if (result.passages){
-            this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(result.passages[0]);
+        paragraph.Segments.forEach(segment => {
+          if (segment.Reference?.Canonical && !this.bibleTexts.includes(segment.Reference.Canonical)) {
+            this.bibleTexts.push(segment.Reference.Canonical);
           }
-        }, error => console.log(error))
-        .add(() => this.loadingChange(false));
+        })
+      })
+      if (!skipScriptureLoad) {
+        this.loadScripture();
       }
     }
   }
 
-  scriptureChanged(){
-    this.scriptureHtml = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[this.esvIndex]);
+  loadScripture(canonical?: string) {
+    if (!this.esvResponse) {
+      if (!this.bibleTexts || this.bibleTexts.length === 0) {
+        this.loadDescription(true);
+      }
+
+      let bibleRefs = this.bibleTexts.join('; ');
+      if (bibleRefs) {
+        this.loadingChange(true);
+        this._scriptureService.GetScripture(bibleRefs).subscribe(result => {
+          this.esvResponse = result;
+        }, error => console.log(error))
+        .add(() => {
+          this.loadingChange(false);
+          this.scriptureChanged(canonical);
+        });
+      }
+    } else {
+      this.scriptureChanged(canonical);
+    }
+  }
+
+  private scriptureChanged(canonical: string){
+    if (canonical){
+      this.toolTipReference = canonical;
+
+      canonical = canonical.toLowerCase();
+      let index = this.esvResponse.passage_meta.findIndex(meta => meta.canonical.toLowerCase() == canonical);
+
+      if (index > -1) {
+        this.toolTipScripture = this.sanitizer.bypassSecurityTrustHtml(this.esvResponse.passages[index]);
+        this.toolTipIndexes = this.esvResponse.parsed[index];
+      } else {
+        this.toolTipScripture = "Error!";
+      }
+    }
   }
 
   selectSeries(seriesID: number){
     this.seriesSelected.emit(seriesID);
   }
 
-  selectSpeaker()
-  {
-    console.log('speaker select clicked')
+  selectSpeaker() {
     this.speakerSelected.emit(this.sermon.speaker.displayName);
   }
 

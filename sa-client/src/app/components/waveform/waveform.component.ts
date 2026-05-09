@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject, of } from 'rxjs';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { WaveformPeak } from 'src/app/models/waveform-peak.model';
 import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service.service';
 import * as utilities from 'src/app/utilities';
 
@@ -12,7 +13,7 @@ import * as utilities from 'src/app/utilities';
     standalone: false
 })
 export class WaveformComponent implements OnInit, AfterViewInit {
-  peaks$: Observable<number[]>;
+  peaks$: Observable<WaveformPeak[]>;
   @Input() sermonId: number;
   @Input() height: number;
   @Input() maxHeight: number;
@@ -47,10 +48,9 @@ export class WaveformComponent implements OnInit, AfterViewInit {
         }
 
         //Convert to percents - use relative height to make better use of space.
-        peaks = peaks.map(val => val * 100);
         let max = Math.max(...peaks)
-        let adjustment = 100 - max - 5;
-        peaks = peaks.map(peak => peak += (adjustment * (peak/max)));
+        let adjustment = 1 - max - .005;
+        peaks = peaks.map(peak => peak = (peak + (adjustment * (peak/max))) * 100);
         this.peakWidth = Math.max((100/peaks.length) - utilities.peakGutterPercent, 0);
         return peaks;
       }),
@@ -58,6 +58,18 @@ export class WaveformComponent implements OnInit, AfterViewInit {
         let peaks = utilities.DefaultWaveform(this.maxNumberOfPeaks);
         this.peakWidth = (100/peaks.length) - utilities.peakGutterPercent;
         return of(peaks);
+      }),
+      map(peaks => {
+        let index = 0;
+        let indexedPeaks: WaveformPeak[] = [];
+        peaks.forEach(peak => {
+          indexedPeaks.push({
+            index: index,
+            peakHeight: peak
+          });
+          index++;
+        })
+        return indexedPeaks;
       }),
       tap(() => 
       {

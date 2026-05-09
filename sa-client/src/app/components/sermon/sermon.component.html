@@ -1,62 +1,108 @@
 <div class="row mx-0 mx-md-3 mt-2 m-auto border-0">
-    <div class="col-12 bg-transparent pb-1" style="border-bottom: 1px solid black; position:relative">
-        <div class="w-100 align-items-center d-flex">
-            <div style="width:75px; position:relative">
-                <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
-            </div>
-            <div class="ms-2">
-                <a class="text-decoration-none">
-                    <h4 class="h4 clickable" *ngIf="sermon.bibleText || sermon.moreInfoText" (click)="toggleDescription()"><span>{{sermon.bibleText}}</span></h4>
-                    <h5 class="h5 o-90 clickable" (click)="toggleDescription()">
-                        <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span><i class="bi bi-caret-down toggle" [class.active]="showDescription"></i>
-                    </h5> 
-                </a>
-            </div>
-        </div>
-        <div class="position-absolute" style="z-index:1000; bottom:0; right:0;">
-            <a *ngIf="sermon.series" (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon.series?.title}}</a>
-        </div>
+  <div class="col-12 bg-transparent pb-1" style="border-bottom: 1px solid black; position:relative">
+    <div class="w-100 align-items-center d-flex">
+      <div style="width:75px; position:relative">
+        <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker.displayName" [src]="sermon.speaker.roundedThumbnailImageURL" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
+      </div>
+      <div class="ms-2">
+        @if (sermonScriptures) {
+          @for (scripture of sermonScriptures; track scripture) {
+            <span class="h4 clickable scriptureText"
+                (click)="loadScripture(scripture); toggler.toggle()"
+                [ngbTooltip]="scriptureToolTip"
+                [openDelay]="200"
+                [closeDelay]="1000"
+                [autoClose]="'outside'"
+                triggers="manual:blur"
+                tooltipClass="tooltip-override"
+                #toggler="ngbTooltip">{{scripture}}</span>
+          }
+        }
+        <h5 class="h5 o-90" [class.clickable]="sermon.moreInfoText" (click)="toggleDescription()">
+          <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span>
+          @if (sermon.moreInfoText) {<i class="bi bi-caret-down toggle" [class.active]="showDescription"></i> }
+        </h5>
+      </div>
     </div>
-    <div class="col-12" style="position: relative">
-        <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
-        <div class="row" *ngIf="!showAudio && !showVideo">
-            <div class="col">
-                <div class="position-absolute w-100" style="z-index:1000;">
-                    <div class="mt-4 pt-2 listen-view-buttons">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col">
-                                <div class="text-center me-4">
-                                    <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true"><i class="bi bi-headphones"></i> &nbsp; <span class="d-none d-md-inline">Listen</span></button>
-                                    <button class="btn btn-primary px-4 o-80" (click)="showVideo = true" *ngIf="hasVideo"><i class="bi bi-tv"></i> &nbsp; <span class="d-none d-md-inline">Watch</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="position-absolute" style="z-index:1000; bottom:0; right:0;">
+      @if (sermon.series) {
+        <a (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon.series?.title}}</a>
+      }
+    </div>
+  </div>
+  <div class="col-12" style="position: relative">
+    <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
+    @if (showDescription) {
+      <div class="row">
+        @if (sermon.moreInfoText) {
+          <div class="col">
+            @for (paragraph of descriptionParagraphs; track paragraph) {
+              <p>
+                @for (segment of paragraph.Segments; track segment) {
+                  <span>
+                    @if (segment.Reference == undefined) {
+                      <span>{{segment.Text}}</span>
+                    }
+                    @if (segment.Reference != undefined) {
+                      <span
+                        class="clickable"
+                        (click)="loadScripture(segment.Reference.Canonical); toggler.toggle()"
+                        [ngbTooltip]="scriptureToolTip"
+                        [openDelay]="200"
+                        [closeDelay]="1000"
+                        [autoClose]="'outside'"
+                        triggers="manual:blur"
+                        tooltipClass="tooltip-override"
+                        #toggler="ngbTooltip">
+                        {{segment.Text}}
+                      </span>
+                    }
+                  </span>
+                }
+              </p>
+            }
+          </div>
+        }
+      </div>
+    }
+    @if (!showAudio && !showVideo) {
+      <div class="row">
+        <div class="col">
+          <div class="position-absolute w-100" style="z-index:1000;">
+            <div class="mt-3 pt-2 listen-view-buttons">
+              <div class="row d-flex justify-content-center">
+                <div class="col">
+                  <div class="text-center me-4">
+                    <button class="btn btn-primary px-4 o-80" [class.me-2]="hasVideo" (click)="showAudio = true"><i class="bi bi-headphones"></i><span class="d-none d-md-inline"> &nbsp; Listen</span></button>
+                    @if (hasVideo) {
+                      <button class="btn btn-primary px-4 o-80" (click)="showVideo = true"><i class="bi bi-tv"></i><span class="d-none d-md-inline"> &nbsp; Watch</span></button>
+                    }
+                  </div>
                 </div>
-                <app-waveform [sermonId]="sermon.sermonID" height="80" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks" (loadingChange)="loadingChange($event)"></app-waveform>
+              </div>
             </div>
+          </div>
+          <app-waveform [sermonId]="sermon.sermonID" height="80" maxHeight="20" [maxNumberOfPeaks]="maxNumberOfPeaks" (loadingChange)="loadingChange($event)"></app-waveform>
         </div>
-        <div class="row" *ngIf="showAudio">
-            <iframe width="100%" [src]="sermonAudioUrl" style="min-width: 150px" frameborder="0"></iframe>
+      </div>
+    }
+    @if (showAudio) {
+      <div class="row">
+        <iframe width="100%" [src]="sermonAudioUrl" style="min-width: 150px" frameborder="0"></iframe>
+      </div>
+    }
+    @if (showVideo) {
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-10">
+          <div style="position:relative;width:100%;height:0;padding-bottom:56.25%"><iframe tabindex="-1" width="100%" height="100%" [src]="sermonAudioVideoUrl" style="position:absolute;left:0;top:0" allowfullscreen frameborder="0" scrolling="no"></iframe></div>
         </div>
-        <div *ngIf="showVideo" class="row">
-            <div class="col"></div>
-            <div class="col-10">
-                <div style="position:relative;width:100%;height:0;padding-bottom:56.25%"><iframe tabindex="-1" width="100%" height="100%" [src]="sermonAudioVideoUrl" style="position:absolute;left:0;top:0" allowfullscreen frameborder="0" scrolling="no"></iframe></div>
-            </div>
-            <div class="col"></div>
-        </div>
-        <div class="row" *ngIf="showDescription">
-            <div class="col-12 col-md-6">
-                <select name="ddlScripture" id="ddlScripture" class="form-select" *ngIf="showScriptureDropDown" [(ngModel)]="esvIndex" (change)="scriptureChanged()">
-                    <option [value]="i" *ngFor="let reference of esvResponse.passage_meta; let i=index;">{{reference.canonical}}</option>
-                </select>
-                <div [innerHTML]="scriptureHtml"></div>
-            </div>
-            <div class="col-12 col-md-6" *ngIf="sermon.moreInfoText">
-                <h3>Description</h3>
-                <p *ngFor="let chunk of descriptionChunks">{{chunk}}</p>
-            </div>
-        </div>
-    </div>
+        <div class="col"></div>
+      </div>
+    }
+  </div>
 </div>
+
+<ng-template #scriptureToolTip>
+  <app-scripture-display [scriptureHtml]="toolTipScripture" [parsed]="toolTipIndexes" [reference]="toolTipReference"></app-scripture-display>
+</ng-template>

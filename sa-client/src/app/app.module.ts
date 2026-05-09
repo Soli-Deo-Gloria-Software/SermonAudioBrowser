@@ -13,6 +13,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { RouterModule, Routes } from '@angular/router';
 import { AvatarComponent } from './components/avatar/avatar.component';
+import { ScriptureDisplayComponent } from './components/scripture-display/scripture-display.component';
 
 const routes: Routes = [
       { path: 'sermon/:id', component: SermonComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
 @NgModule({ declarations: [
         AppComponent,
         AvatarComponent,
+        ScriptureDisplayComponent,
         SermonComponent,
         SermonListComponent,
         WaveformComponent,

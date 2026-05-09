@@ -13,7 +13,10 @@ If you are using this client app in conjunction with the word press proxy plugin
 This is an angular app, so you will need node js and the angular cli to build the client app. Once installed, navigate to the root directory for this repo and run `npm i` to install all dependencies. After that process finishes, run `ng build --configuration [environment]`. The output will be placed in the dist folder. Copy these files to your site and reference the files as needed.
 
 ### Supported Environments Are:
-* Wordpress - for use with the wordpress plugin providing proxy apis at /wp-json
+* Wordpress - for use with the wordpress plugin providing proxy apis at /wp-json - Note: This requires your word press environment to use the "Post name" permalink structure.
 
 # Supported Scripture Translations
 By preference, the developer has created this application based on the esv api. It is recommended that different scripture translations be handled by the proxy apis to keep this application as simple as possible. This would involve creating or using some form of standardized api response which proxies would then implement regardless of back-end translation selections. In the event that a user selectable scripture translation is desired, we should still leverage most of the logic on the proxy side to keep the client as simple as possible; however, we would also need to add an api to allow users to know which translations are available as the individual users of the plugin may not have api keys for different scripture versions. Doing it this way will allow for new scripture versions to be added simply by changing the server side code instead of needing to navigate dependencies between the 2+ code repositories.
+
+# Debugging
+By default, the debug environment is wired up to communicate via the wordpress docker image
