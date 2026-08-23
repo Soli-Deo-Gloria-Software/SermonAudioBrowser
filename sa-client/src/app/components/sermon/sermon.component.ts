@@ -14,27 +14,27 @@ import * as AvatarSize from 'src/app/models/enums/avatar-size'
   standalone: false
 })
 export class SermonComponent implements OnInit {
-  @Input() sermon: SermonAudioSermon;
+  @Input() sermon!: SermonAudioSermon;
   @Output() seriesSelected: EventEmitter<number> = new EventEmitter();
   @Output() speakerSelected: EventEmitter<string> = new EventEmitter();
 
-  sermonAudioUrl: SafeResourceUrl;
-  sermonAudioVideoUrl: SafeResourceUrl;
-  hasVideo: boolean;
-  videoThumbnailUrl: SafeResourceUrl;
+  sermonAudioUrl!: SafeResourceUrl;
+  sermonAudioVideoUrl!: SafeResourceUrl;
+  hasVideo!: boolean;
+  videoThumbnailUrl!: SafeResourceUrl;
   showVideo: boolean = false;
   showAudio: boolean = false;
   showDescription: boolean = false;
   spinnerId: string = '';
-  esvResponse: EsvResponse;
-  descriptionParagraphs: TextParagraph[];
+  esvResponse!: EsvResponse;
+  descriptionParagraphs!: TextParagraph[];
   bibleTexts: string[] = [];
   bibleParser: BibleParser = new BibleParser();
   AvatarSize = AvatarSize.AvatarSize;
-  maxNumberOfPeaks: number;
-  toolTipScripture: SafeHtml;
-  toolTipReference: string;
-  toolTipIndexes: number[];
+  maxNumberOfPeaks!: number;
+  toolTipScripture!: SafeHtml;
+  toolTipReference!: string;
+  toolTipIndexes!: number[];
   sermonScriptures: string[] = [];
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
   }
@@ -84,7 +84,7 @@ export class SermonComponent implements OnInit {
         parseText += `\n${this.sermon.moreInfoText}`;
       }
 
-      let parseResult = this.bibleParser.parseAndSplit(parseText);
+      let parseResult = this.bibleParser.findAndSplitText(parseText);
       this.descriptionParagraphs = [];
       parseResult.Paragraphs.forEach((paragraph, index) => {
         if (index > 0) {
@@ -92,8 +92,9 @@ export class SermonComponent implements OnInit {
         }
 
         paragraph.Segments.forEach(segment => {
-          if (segment.Reference?.Canonical && !this.bibleTexts.includes(segment.Reference.Canonical)) {
-            this.bibleTexts.push(segment.Reference.Canonical);
+          let canonical = segment.Reference?.getCanonical()
+          if (canonical && !this.bibleTexts.includes(canonical)) {
+            this.bibleTexts.push(canonical);
           }
         })
       })
@@ -125,7 +126,7 @@ export class SermonComponent implements OnInit {
     }
   }
 
-  private scriptureChanged(canonical: string){
+  private scriptureChanged(canonical?: string){
     if (canonical){
       this.toolTipReference = canonical;
 
