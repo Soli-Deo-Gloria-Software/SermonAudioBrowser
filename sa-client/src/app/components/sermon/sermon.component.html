@@ -46,7 +46,7 @@
                     @if (segment.Reference != undefined) {
                       <span
                         class="clickable"
-                        (click)="loadScripture(segment.Reference.Canonical); toggler.toggle()"
+                        (click)="loadScripture(segment.Reference.getCanonical()); toggler.toggle()"
                         [ngbTooltip]="scriptureToolTip"
                         [openDelay]="200"
                         [closeDelay]="1000"
