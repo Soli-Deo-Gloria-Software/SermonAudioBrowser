@@ -1,7 +1,7 @@
 export class SermonAudioV2ResponseWrapper<T> {
-    nodeType: string;
-    nodeDisplayName: string;
-    results: T[];
-    totalCount: number;
-    next: string;
+    nodeType: string = '';
+    nodeDisplayName: string = '';
+    results: T[] = [];
+    totalCount: number = 0;
+    next: string = '';
 }

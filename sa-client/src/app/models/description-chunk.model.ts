@@ -1,4 +1,4 @@
 export class DescriptionChunk {
-    Text: string;
-    CanonicalBibleReference: string|undefined;
+    Text: string = '';
+    CanonicalBibleReference: string|undefined = undefined;
 }

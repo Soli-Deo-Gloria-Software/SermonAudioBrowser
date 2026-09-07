@@ -1,14 +1,14 @@
 export class SermonAudioMedia {
-    adaptiveBitrate: boolean;
-    audioCodec: string;
-    bitrate: number;
-    downloadUrl: string;
-    duration: number;
-    eventStreamURL: string;
-    live: boolean;
-    mediaType: string;
-    streamURL: string;
-    thumbnailImageURL: string;
-    type: string;
-    videoCodec: string;
+    adaptiveBitrate: boolean = false;
+    audioCodec: string = '';
+    bitrate: number = 0;
+    downloadUrl: string = '';
+    duration: number = 0;
+    eventStreamURL: string = '';
+    live: boolean = false;
+    mediaType: string = '';
+    streamURL: string = '';
+    thumbnailImageURL: string = '';
+    type: string = '';
+    videoCodec: string = '';
 }

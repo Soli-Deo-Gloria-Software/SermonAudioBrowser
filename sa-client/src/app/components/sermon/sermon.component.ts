@@ -43,7 +43,7 @@ export class SermonComponent implements OnInit {
   ngOnInit(): void {
     this.spinnerId = randomString();
     this.sermonAudioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/a/${this.sermon.sermonID}/`);
-    if (this.sermon.media.video.length > 0)
+    if (this.sermon.media?.video.length ?? 0 > 0)
     {
       this.sermonAudioVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/v/${this.sermon.sermonID}/`);
       this.hasVideo = true;
@@ -148,7 +148,8 @@ export class SermonComponent implements OnInit {
   }
 
   selectSpeaker() {
-    this.speakerSelected.emit(this.sermon.speaker.displayName);
+    if (this.sermon.speaker)
+      this.speakerSelected.emit(this.sermon.speaker.displayName);
   }
 
   loadingChange(showSpinner: boolean){

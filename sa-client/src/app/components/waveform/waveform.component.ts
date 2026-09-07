@@ -14,15 +14,15 @@ import * as utilities from 'src/app/utilities';
     standalone: false
 })
 export class WaveformComponent implements OnInit, AfterViewInit {
-  peaks$: Observable<WaveformPeak[]>;
-  @Input() sermonId: number;
-  @Input() height: number;
-  @Input() maxHeight: number;
-  @Input() maxNumberOfPeaks?: number;
+  peaks$!: Observable<WaveformPeak[]>;
+  @Input() sermonId!: number;
+  @Input() height!: number;
+  @Input() maxHeight!: number;
+  @Input() maxNumberOfPeaks: number = 1500;
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
   @Output() loadingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  peakWidth:number;
+  peakWidth!:number;
   constructor(private _sermonAudioClient: SermonAudioServiceService) { }
 
   ngOnInit(): void {
