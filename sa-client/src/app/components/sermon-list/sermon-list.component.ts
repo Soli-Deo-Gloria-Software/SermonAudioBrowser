@@ -2,12 +2,12 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, skip, take, takeUntil, tap } from 'rxjs/operators';
-import { EnumParse } from 'src/app/utilities';
+import { EnumParse } from '../../utilities';
 import { BibleBook, BibleBookNames } from '@soli-deo-gloria-software/bible-books';
-import { SermonAudioSeries } from 'src/app/models/sermon-audio-series.model';
-import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
-import { SermonAudioSpeaker } from 'src/app/models/sermon-audio-speaker.model';
-import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service.service';
+import { SermonAudioSeries } from '../../models/sermon-audio-series.model';
+import { SermonAudioSermon } from '../../models/sermon-audio-sermon.model';
+import { SermonAudioSpeaker } from '../../models/sermon-audio-speaker.model';
+import { SermonAudioServiceService } from '../../services/sermon-audio-service.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -18,9 +18,9 @@ import { ActivatedRoute } from '@angular/router';
     standalone: false
 })
 export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
-  sermons$: Observable<SermonAudioSermon[]>;
-  speakers$: Observable<SermonAudioSpeaker[]>;
-  series$: Observable<SermonAudioSeries[]>;
+  sermons$!: Observable<SermonAudioSermon[]>;
+  speakers$!: Observable<SermonAudioSpeaker[]>;
+  series$!: Observable<SermonAudioSeries[]>;
   searchKeyword: string = '';
   bibleBook = BibleBook;
   bibleBookNames = BibleBookNames;
@@ -43,7 +43,8 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     Object.keys(this.bibleBook).filter(key => isNaN(<any>key))
     .forEach(key => {
       let book = EnumParse(this.bibleBook, key);
-      this.bibleBooks.push(book);
+      if (book)
+        this.bibleBooks.push(book);
     });
 
     this._route.queryParamMap

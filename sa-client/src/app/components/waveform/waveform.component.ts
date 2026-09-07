@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject, of } from 'rxjs';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { WaveformPeak } from 'src/app/models/waveform-peak.model';
-import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service.service';
-import * as utilities from 'src/app/utilities';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { WaveformPeak } from '../../models/waveform-peak.model';
+import { SermonAudioServiceService } from '../../services/sermon-audio-service.service';
+import * as utilities from '../../utilities';
 
 @Component({
     selector: 'app-waveform',

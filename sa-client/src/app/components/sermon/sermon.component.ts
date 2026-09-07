@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
-import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
+import { SermonAudioSermon } from '../../models/sermon-audio-sermon.model';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { ScriptureService } from 'src/app/services/scripture.service';
-import { randomString } from 'src/app/utilities';
+import { ScriptureService } from '../../services/scripture.service';
+import { randomString } from '../../utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BibleParser, TextParagraph } from '@soli-deo-gloria-software/bible-reference-finder';
-import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
-import * as AvatarSize from 'src/app/models/enums/avatar-size'
+import { EsvResponse } from '../../models/Esv/esv-response.model';
+import * as AvatarSize from '../../models/enums/avatar-size'
 
 @Component({
   selector: 'app-sermon',

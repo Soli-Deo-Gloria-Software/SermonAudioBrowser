@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SermonAudioV2ResponseWrapper } from '../models/sermon-audio-v2-response-wrapper.model';
 import { SermonAudioSermon } from '../models/sermon-audio-sermon.model';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'
 import { BibleBook, BibleBookOsisCodes } from '@soli-deo-gloria-software/bible-books';
