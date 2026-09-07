@@ -9,6 +9,7 @@ import { SermonAudioSermon } from '../../models/sermon-audio-sermon.model';
 import { SermonAudioSpeaker } from '../../models/sermon-audio-speaker.model';
 import { SermonAudioServiceService } from '../../services/sermon-audio-service.service';
 import { ActivatedRoute } from '@angular/router';
+import { IBibleReference } from '@soli-deo-gloria-software/bible-reference-finder';
 
 @Component({
     selector: 'app-sermon-list',
@@ -37,6 +38,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   seriesID: number = 0;
   searchSpinner = 'default';
   sermonId: number = 0;
+  referenceFilter: IBibleReference | undefined;
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private _saService: SermonAudioServiceService, private _spinner: NgxSpinnerService, private _route: ActivatedRoute) { 
@@ -102,7 +104,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   getSermons(){
     this._spinner.show(this.searchSpinner);
     
-    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.selectedBook, this.chapterFrom, this.chapterTo, this.verseFrom, this.verseTo, this.speaker, this.seriesID, this.sermonId).pipe(
+    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.referenceFilter?.Book.Book, this.referenceFilter?.StartingChapter, this.referenceFilter?.EndingChapter, this.referenceFilter?.StartingVerse, this.referenceFilter?.EndingVerse, this.speaker, this.seriesID, this.sermonId).pipe(
       takeUntil(this.ngUnsubscribe),
       map(results => 
         {
@@ -138,6 +140,14 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.speaker != speakerName){
       this.speaker = speakerName;
       this.search();
+    }
+  }
+
+  onReferencesUpdated(refs: IBibleReference[]) {
+    if (refs && refs.length) {
+      this.referenceFilter = refs[0];
+    } else {
+      this.referenceFilter = undefined;
     }
   }
 

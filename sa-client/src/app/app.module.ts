@@ -14,6 +14,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { RouterModule, Routes } from '@angular/router';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { ScriptureDisplayComponent } from './components/scripture-display/scripture-display.component';
+import { SdgComponentsAngularModule } from '@soli-deo-gloria-software/sdg-components-angular'
 
 const routes: Routes = [
       { path: 'sermon/:id', component: SermonComponent },
@@ -29,10 +30,17 @@ const routes: Routes = [
         WaveformComponent,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], 
+    imports: [
+        BrowserModule,
         BrowserAnimationsModule,
         NgbModule,
         FormsModule,
         RouterModule.forRoot(routes),
-        NgxSpinnerModule.forRoot({ type: 'line-scale' })], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
+        NgxSpinnerModule.forRoot({ type: 'line-scale' }),
+        SdgComponentsAngularModule
+    ],
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())
+    ] 
+})
 export class AppModule { }
