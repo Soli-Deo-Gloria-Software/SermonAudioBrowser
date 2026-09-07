@@ -2,7 +2,7 @@
   <div class="col-12 bg-transparent pb-1" style="border-bottom: 1px solid black; position:relative">
     <div class="w-100 align-items-center d-flex">
       <div style="width:75px; position:relative">
-        <app-avatar class="float-start me-2 clickable" [name]="sermon.speaker?.displayName ?? ''" [src]="sermon.speaker?.roundedThumbnailImageURL ?? ''" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
+        <app-avatar class="float-start me-2 clickable" [name]="sermon().speaker?.displayName ?? ''" [src]="sermon().speaker?.roundedThumbnailImageURL ?? ''" [size]="AvatarSize.md" [displayCircle]="true" (click)="selectSpeaker()"></app-avatar>
       </div>
       <div class="ms-2">
         @if (sermonScriptures) {
@@ -18,15 +18,15 @@
                 #toggler="ngbTooltip">{{scripture}}</span>
           }
         }
-        <h5 class="h5 o-90" [class.clickable]="sermon.moreInfoText" (click)="toggleDescription()">
-          <span class="d-none d-md-inline">{{sermon.fullTitle}} <small>({{sermon.preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon.displayTitle}}</span>
-          @if (sermon.moreInfoText) {<i class="bi bi-caret-down toggle" [class.active]="showDescription"></i> }
+        <h5 class="h5 o-90" [class.clickable]="sermon().moreInfoText" (click)="toggleDescription()">
+          <span class="d-none d-md-inline">{{sermon().fullTitle}} <small>({{sermon().preachDate | date}})</small></span> <span class="d-inline d-md-none text-small">{{sermon().displayTitle}}</span>
+          @if (sermon().moreInfoText) {<i class="bi bi-caret-down toggle" [class.active]="showDescription"></i> }
         </h5>
       </div>
     </div>
     <div class="position-absolute" style="z-index:1000; bottom:0; right:0;">
-      @if (sermon.series) {
-        <a (click)="selectSeries(sermon.series.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon.series?.title}}</a>
+      @if (sermon().series) {
+        <a (click)="selectSeries(sermon().series?.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon().series?.title}}</a>
       }
     </div>
   </div>
@@ -34,7 +34,7 @@
     <ngx-spinner [fullScreen]="false" [name]="spinnerId"></ngx-spinner>
     @if (showDescription) {
       <div class="row">
-        @if (sermon.moreInfoText) {
+        @if (sermon().moreInfoText) {
           <div class="col">
             @for (paragraph of descriptionParagraphs; track paragraph) {
               <p>
@@ -82,7 +82,7 @@
               </div>
             </div>
           </div>
-          <app-waveform [sermonId]="+sermon.sermonID" [height]="80" [maxHeight]="20" [maxNumberOfPeaks]="maxNumberOfPeaks" (loadingChange)="loadingChange($event)"></app-waveform>
+          <app-waveform [sermonId]="+sermon().sermonID" [height]="80" [maxHeight]="20" [maxNumberOfPeaks]="maxNumberOfPeaks" (loadingChange)="loadingChange($event)"></app-waveform>
         </div>
       </div>
     }

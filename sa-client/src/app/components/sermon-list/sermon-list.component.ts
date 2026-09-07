@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, map, skip, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, map, take, takeUntil, tap } from 'rxjs/operators';
 import { EnumParse } from '../../utilities';
 import { BibleBook, BibleBookNames } from '@soli-deo-gloria-software/bible-books';
 import { SermonAudioSeries } from '../../models/sermon-audio-series.model';

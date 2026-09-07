@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { WaveformPeak } from '../../models/waveform-peak.model';
@@ -14,10 +14,10 @@ import * as utilities from '../../utilities';
 })
 export class WaveformComponent implements OnInit, AfterViewInit {
   peaks$!: Observable<WaveformPeak[]>;
-  @Input() sermonId!: number;
-  @Input() height!: number;
-  @Input() maxHeight!: number;
-  @Input() maxNumberOfPeaks: number = 1500;
+  sermonId = input.required<number>();
+  height = input.required<number>();
+  maxHeight = input.required<number>();
+  maxNumberOfPeaks = input<number>(1500);
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
   @Output() loadingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -35,16 +35,16 @@ export class WaveformComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.loadingChange.emit(true);
-    this.peaks$ = this._sermonAudioClient.downloadWaveform(this.sermonId).pipe( 
+    this.peaks$ = this._sermonAudioClient.downloadWaveform(this.sermonId()).pipe( 
       takeUntil(this.ngUnsubscribe),
       map(result => {
         let peaks: number[] = [];
-        if (this.maxNumberOfPeaks >= result.length)
+        if (this.maxNumberOfPeaks() >= result.length)
         {
           peaks = result;
         }
         else{
-          peaks = utilities.reduceWaveform(result, this.maxNumberOfPeaks);
+          peaks = utilities.reduceWaveform(result, this.maxNumberOfPeaks());
         }
 
         //Convert to percents - use relative height to make better use of space.
@@ -55,7 +55,7 @@ export class WaveformComponent implements OnInit, AfterViewInit {
         return peaks;
       }),
       catchError(() => {
-        let peaks = utilities.DefaultWaveform(this.maxNumberOfPeaks);
+        let peaks = utilities.DefaultWaveform(this.maxNumberOfPeaks());
         this.peakWidth = (100/peaks.length) - utilities.peakGutterPercent;
         return of(peaks);
       }),

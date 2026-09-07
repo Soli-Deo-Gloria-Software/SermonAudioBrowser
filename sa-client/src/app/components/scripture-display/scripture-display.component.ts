@@ -1,5 +1,5 @@
 import { Component, input, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-scripture-display',
@@ -13,7 +13,7 @@ export class ScriptureDisplayComponent implements OnInit {
   scriptureHtml = input.required<SafeHtml>();
   showAudio: boolean = false;
 
-  constructor(private _sanitizer: DomSanitizer) {
+  constructor() {
   }
   unsafeAudioLink: string = '';
   ngOnInit():void {
