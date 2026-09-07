@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { EsvPassageMetadata } from 'src/app/models/Esv/esv-passage-metadata.model';
 
 @Component({
   selector: 'app-scripture-display',
   templateUrl: './scripture-display.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ScriptureDisplayComponent implements OnInit {

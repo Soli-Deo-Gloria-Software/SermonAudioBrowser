@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, skip, take, takeUntil, tap } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'app-sermon-list',
     templateUrl: './sermon-list.component.html',
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {

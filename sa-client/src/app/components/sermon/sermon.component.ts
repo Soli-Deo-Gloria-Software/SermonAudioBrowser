@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { ScriptureService } from 'src/app/services/scripture.service';
@@ -11,6 +11,7 @@ import * as AvatarSize from 'src/app/models/enums/avatar-size'
 @Component({
   selector: 'app-sermon',
   templateUrl: './sermon.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class SermonComponent implements OnInit {

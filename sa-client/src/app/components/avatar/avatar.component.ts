@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import  * as AvatarSize from 'src/app/models/enums/avatar-size';
 
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './avatar.component.css'
 })
 export class AvatarComponent implements OnInit {

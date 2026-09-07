@@ -5,7 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { SermonComponent } from './components/sermon/sermon.component';
 import { SermonListComponent } from './components/sermon-list/sermon-list.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { WaveformComponent } from './components/waveform/waveform.component';
@@ -34,5 +34,5 @@ const routes: Routes = [
         NgbModule,
         FormsModule,
         RouterModule.forRoot(routes),
-        NgxSpinnerModule.forRoot({ type: 'line-scale' })], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        NgxSpinnerModule.forRoot({ type: 'line-scale' })], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class AppModule { }

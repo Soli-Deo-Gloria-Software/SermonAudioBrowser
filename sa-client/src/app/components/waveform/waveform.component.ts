@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import * as utilities from 'src/app/utilities';
     selector: 'app-waveform',
     templateUrl: './waveform.component.html',
     styleUrls: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class WaveformComponent implements OnInit, AfterViewInit {
