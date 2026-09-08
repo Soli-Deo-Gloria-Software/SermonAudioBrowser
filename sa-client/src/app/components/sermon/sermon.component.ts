@@ -37,11 +37,16 @@ export class SermonComponent implements OnInit {
   toolTipReference!: string;
   toolTipIndexes!: number[];
   sermonScriptures: string[] = [];
+  avatarUrl: string|undefined;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
   }
 
   ngOnInit(): void {
     let sermon = this.sermon();
+    if (!sermon.speaker?.albumArtURL.includes('generic')) {
+      this.avatarUrl = sermon.speaker?.roundedThumbnailImageURL;
+    }
+
     this.spinnerId = randomString();
     this.sermonAudioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/a/${sermon.sermonID}/`);
     if (sermon.media?.video.length ?? 0 > 0)

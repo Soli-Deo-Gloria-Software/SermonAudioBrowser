@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { SermonComponent } from './components/sermon/sermon.component';
@@ -38,7 +39,8 @@ const routes: Routes = [
         FormsModule,
         RouterModule.forRoot(routes),
         NgxSpinnerModule.forRoot({ type: 'line-scale' }),
-        SdgComponentsAngularModule
+        SdgComponentsAngularModule,
+        ReactiveFormsModule
     ],
     providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())
     ] 
