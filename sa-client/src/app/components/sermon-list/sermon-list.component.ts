@@ -1,25 +1,28 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, map, skip, take, takeUntil, tap } from 'rxjs/operators';
-import { EnumParse } from 'src/app/utilities';
+import { debounceTime, distinctUntilChanged, map, take, takeUntil, tap } from 'rxjs/operators';
+import { EnumParse } from '../../utilities';
 import { BibleBook, BibleBookNames } from '@soli-deo-gloria-software/bible-books';
-import { SermonAudioSeries } from 'src/app/models/sermon-audio-series.model';
-import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
-import { SermonAudioSpeaker } from 'src/app/models/sermon-audio-speaker.model';
-import { SermonAudioServiceService } from 'src/app/services/sermon-audio-service.service';
+import { SermonAudioSeries } from '../../models/sermon-audio-series.model';
+import { SermonAudioSermon } from '../../models/sermon-audio-sermon.model';
+import { SermonAudioSpeaker } from '../../models/sermon-audio-speaker.model';
+import { SermonAudioServiceService } from '../../services/sermon-audio-service.service';
 import { ActivatedRoute } from '@angular/router';
+import { IBibleReference } from '@soli-deo-gloria-software/bible-reference-finder';
 
 @Component({
     selector: 'app-sermon-list',
     templateUrl: './sermon-list.component.html',
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
-  sermons$: Observable<SermonAudioSermon[]>;
-  speakers$: Observable<SermonAudioSpeaker[]>;
-  series$: Observable<SermonAudioSeries[]>;
+  sermons$!: Observable<SermonAudioSermon[]>;
+  speakers$!: Observable<SermonAudioSpeaker[]>;
+  series$!: Observable<SermonAudioSeries[]>;
   searchKeyword: string = '';
   bibleBook = BibleBook;
   bibleBookNames = BibleBookNames;
@@ -36,13 +39,17 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   seriesID: number = 0;
   searchSpinner = 'default';
   sermonId: number = 0;
+  referenceFilter: IBibleReference | undefined;
+  keywordControl = new FormControl('');
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
+  protected ngDestroy: Subject<void> = new Subject<void>();
 
   constructor(private _saService: SermonAudioServiceService, private _spinner: NgxSpinnerService, private _route: ActivatedRoute) { 
     Object.keys(this.bibleBook).filter(key => isNaN(<any>key))
     .forEach(key => {
       let book = EnumParse(this.bibleBook, key);
-      this.bibleBooks.push(book);
+      if (book)
+        this.bibleBooks.push(book);
     });
 
     this._route.queryParamMap
@@ -75,7 +82,14 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    
+    this.keywordControl.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      takeUntil(this.ngDestroy)
+    ).subscribe(value => {
+      this.searchKeyword = value ?? '';
+      this.search();
+    })
   }
 
   ngAfterViewInit(): void {
@@ -87,6 +101,8 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     //If a user navigates away, terminate all api requests
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this.ngDestroy.next();
+    this.ngDestroy.complete();
    }
 
   search(){
@@ -100,7 +116,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   getSermons(){
     this._spinner.show(this.searchSpinner);
     
-    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.selectedBook, this.chapterFrom, this.chapterTo, this.verseFrom, this.verseTo, this.speaker, this.seriesID, this.sermonId).pipe(
+    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.referenceFilter, this.speaker, this.seriesID, this.sermonId).pipe(
       takeUntil(this.ngUnsubscribe),
       map(results => 
         {
@@ -125,6 +141,14 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  onSeriesChanged(event: Event) {
+    const element = event.target as HTMLInputElement;
+    const value = element.value;
+    const id = isNaN(+value) ? 0 : +value;
+    
+    this.selectSeries(id);
+  }
+
   selectSeries(seriesID: number){
     if (this.seriesID != seriesID){
       this.seriesID = seriesID;
@@ -132,11 +156,28 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  onSpeakerChanged(event: Event) {
+    const element = event.target as HTMLInputElement;
+    const value = element.value;
+
+    this.selectSpeaker(value);
+  }
+
   selectSpeaker(speakerName: string){
     if (this.speaker != speakerName){
       this.speaker = speakerName;
       this.search();
     }
+  }
+
+  onReferencesUpdated(refs: IBibleReference[]) {
+    if (refs && refs.length) {
+      this.referenceFilter = refs[0];
+    } else {
+      this.referenceFilter = undefined;
+    }
+
+    this.search();
   }
 
   pageChanged(){

@@ -1,20 +1,21 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { SermonAudioSermon } from 'src/app/models/sermon-audio-sermon.model';
+import { Component, EventEmitter, input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { SermonAudioSermon } from '../../models/sermon-audio-sermon.model';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { ScriptureService } from 'src/app/services/scripture.service';
-import { randomString } from 'src/app/utilities';
+import { ScriptureService } from '../../services/scripture.service';
+import { randomString } from '../../utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BibleParser, TextParagraph } from '@soli-deo-gloria-software/bible-reference-finder';
-import { EsvResponse } from 'src/app/models/Esv/esv-response.model';
-import * as AvatarSize from 'src/app/models/enums/avatar-size'
+import { EsvResponse } from '../../models/Esv/esv-response.model';
+import * as AvatarSize from '../../models/enums/avatar-size'
 
 @Component({
   selector: 'app-sermon',
   templateUrl: './sermon.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class SermonComponent implements OnInit {
-  @Input() sermon!: SermonAudioSermon;
+  sermon = input.required<SermonAudioSermon>();
   @Output() seriesSelected: EventEmitter<number> = new EventEmitter();
   @Output() speakerSelected: EventEmitter<string> = new EventEmitter();
 
@@ -36,20 +37,26 @@ export class SermonComponent implements OnInit {
   toolTipReference!: string;
   toolTipIndexes!: number[];
   sermonScriptures: string[] = [];
+  avatarUrl: string|undefined;
   constructor(private sanitizer: DomSanitizer, private _scriptureService: ScriptureService, private _spinner: NgxSpinnerService) { 
   }
 
   ngOnInit(): void {
+    let sermon = this.sermon();
+    if (!sermon.speaker?.albumArtURL.includes('generic')) {
+      this.avatarUrl = sermon.speaker?.roundedThumbnailImageURL;
+    }
+
     this.spinnerId = randomString();
-    this.sermonAudioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/a/${this.sermon.sermonID}/`);
-    if (this.sermon.media.video.length > 0)
+    this.sermonAudioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/a/${sermon.sermonID}/`);
+    if (sermon.media?.video.length ?? 0 > 0)
     {
-      this.sermonAudioVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/v/${this.sermon.sermonID}/`);
+      this.sermonAudioVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://embed.sermonaudio.com/player/v/${sermon.sermonID}/`);
       this.hasVideo = true;
     }
 
     this.maxNumberOfPeaks = this.computePeakCount(window.innerWidth);
-    let scriptures = this.sermon.bibleText?.split(";") ?? [];
+    let scriptures = sermon.bibleText?.split(";") ?? [];
     scriptures.forEach(s => this.sermonScriptures.push(s.trim()))
   }
 
@@ -69,7 +76,7 @@ export class SermonComponent implements OnInit {
   }
 
   toggleDescription() {
-    if (!this.sermon.moreInfoText) {
+    if (!this.sermon().moreInfoText) {
       return;
     }
     this.showDescription = !this.showDescription;
@@ -79,9 +86,10 @@ export class SermonComponent implements OnInit {
   loadDescription(skipScriptureLoad: boolean) {
     if (!this.descriptionParagraphs || this.descriptionParagraphs.length == 0)
     {
-      let parseText = `Scripture: ${this.sermon.bibleText}`;
-      if (this.sermon.moreInfoText) {
-        parseText += `\n${this.sermon.moreInfoText}`;
+      let sermon = this.sermon();
+      let parseText = `Scripture: ${sermon.bibleText}`;
+      if (sermon.moreInfoText) {
+        parseText += `\n${sermon.moreInfoText}`;
       }
 
       let parseResult = this.bibleParser.findAndSplitText(parseText);
@@ -142,12 +150,15 @@ export class SermonComponent implements OnInit {
     }
   }
 
-  selectSeries(seriesID: number){
-    this.seriesSelected.emit(seriesID);
+  selectSeries(seriesID: number|undefined){
+    if (seriesID)
+      this.seriesSelected.emit(seriesID);
   }
 
   selectSpeaker() {
-    this.speakerSelected.emit(this.sermon.speaker.displayName);
+    let sermon = this.sermon();
+    if (sermon?.speaker)
+      this.speakerSelected.emit(sermon.speaker.displayName);
   }
 
   loadingChange(showSpinner: boolean){

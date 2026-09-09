@@ -14,7 +14,7 @@ export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks?: nu
       let interval = Math.max(Math.ceil(reduced.length / maximumNumberOfPeaks), 2);
 
       let length = reduced.length;
-      let oldArray = [...reduced];
+      let oldArray: number[]|undefined = [...reduced];
       reduced = [];
 
       for(var i = 0; i < length; i += interval) {
@@ -36,7 +36,7 @@ export const reduceWaveform = (baseWaveform: number[], maximumNumberOfPeaks?: nu
           reduced.push(sum);
         }
       }
-      oldArray = null;
+      oldArray = undefined;
     }
     return reduced;
   }

@@ -1,4 +1,4 @@
-<div [style.height.px]="height" [style.maxHeight.vh]="maxHeight" class="o-70">
+<div [style.height.px]="height()" [style.maxHeight.vh]="maxHeight()" class="o-70">
   <div class="row h-100">
     <div class="col d-flex">
       @for (peak of peaks$ | async; track peak.index) {

@@ -1,25 +1,26 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { EsvPassageMetadata } from 'src/app/models/Esv/esv-passage-metadata.model';
+import { Component, input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-scripture-display',
   templateUrl: './scripture-display.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ScriptureDisplayComponent implements OnInit {
-  @Input() reference: string;
-  @Input() parsed: number[];
-  @Input() scriptureHtml: SafeHtml;
+  reference = input.required<string>();
+  parsed = input.required<number[]>();
+  scriptureHtml = input.required<SafeHtml>();
   showAudio: boolean = false;
 
-  constructor(private _sanitizer: DomSanitizer) {
+  constructor() {
   }
   unsafeAudioLink: string = '';
   ngOnInit():void {
-    if (this.parsed && this.parsed.length == 2){
-      let startIndex = this.parsed[0];
-      let endIndex = this.parsed[1];
+    let parsedValue = this.parsed();
+    if (parsedValue && parsedValue.length == 2){
+      let startIndex = parsedValue[0];
+      let endIndex = parsedValue[1];
       this.unsafeAudioLink = `https://audio.esv.org/david-cochran-heath/mq/${startIndex}-${endIndex}.mp3`;
     }
   }

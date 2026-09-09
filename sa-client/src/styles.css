@@ -10,7 +10,7 @@ app-sermon + app-sermon{
     display: inline-block;
 }
 
-.clickable{
+.clickable:not(.sc-multiselect-item){
     cursor:pointer;
     text-decoration: underline;
 }

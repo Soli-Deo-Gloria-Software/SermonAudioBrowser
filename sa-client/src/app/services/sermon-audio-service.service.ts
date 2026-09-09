@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SermonAudioV2ResponseWrapper } from '../models/sermon-audio-v2-response-wrapper.model';
 import { SermonAudioSermon } from '../models/sermon-audio-sermon.model';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'
 import { BibleBook, BibleBookOsisCodes } from '@soli-deo-gloria-software/bible-books';
 import { SermonAudioSpeaker } from '../models/sermon-audio-speaker.model';
 import { SermonAudioSeries } from '../models/sermon-audio-series.model';
+import { IBibleReference } from '@soli-deo-gloria-software/bible-reference-finder';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,7 @@ export class SermonAudioServiceService {
     }))
   }
 
-  public getSermons(pageNumber: number, pageSize: number, keyword?: string, book?: BibleBook, chapterFrom?: number, chapterTo?: number, verseFrom?: number, verseTo?: number, speaker?: string, seriesID?: number, sermonId?: number) : Observable<SermonAudioV2ResponseWrapper<SermonAudioSermon>>{
+  public getSermons(pageNumber: number, pageSize: number, keyword?: string, reference?: IBibleReference, speaker?: string, seriesID?: number, sermonId?: number) : Observable<SermonAudioV2ResponseWrapper<SermonAudioSermon>>{
     let params: HttpParams = new HttpParams();
 
     params = params.append('page', pageNumber);
@@ -56,29 +57,7 @@ export class SermonAudioServiceService {
       params = params.append('searchKeyword', encodeURIComponent(keyword));
     }
 
-    if (book)
-    {
-      let osis = BibleBookOsisCodes[book];
-      params = params.append('book', osis);
-    }
-
-    if (chapterFrom && chapterFrom > 0)
-    {
-      params = params.append('chapter', chapterFrom);
-      
-      if (chapterTo && chapterTo > 0){
-        params = params.append('chapterEnd', chapterTo);
-      }
-    }
-
-    if (verseFrom && verseFrom > 0)
-    {
-      params = params.append('verse', verseFrom);
-      
-      if (verseTo && verseTo > 0){
-        params = params.append('verseEnd', verseTo);
-      }
-    }
+    params = this.getReferenceParams(reference, params);
 
     if (speaker)
     {
@@ -99,6 +78,32 @@ export class SermonAudioServiceService {
         let body: SermonAudioV2ResponseWrapper<SermonAudioSermon> = JSON.parse(results.body);
         return body;
       }));
+  }
+
+  private getReferenceParams(reference: IBibleReference|undefined, params: HttpParams) : HttpParams {
+    if (!reference || !reference.Book) {
+      return params;
+    }
+
+    params = params.append('book', reference.Book.OsisCode);
+
+    if (reference.StartingChapter) {
+      params = params.append('chapter', reference.StartingChapter);
+    }
+
+    if (reference.StartingVerse) {
+      params = params.append('verse', reference.StartingVerse);
+    }
+
+    if (reference.EndingChapter) { 
+        params = params.append('chapterEnd', reference.EndingChapter);
+    }
+
+    if (reference.EndingVerse) { 
+        params = params.append('verseEnd', reference.EndingVerse);
+    }
+
+    return params;
   }
 
   public downloadWaveform(id: number): Observable<number[]>{
