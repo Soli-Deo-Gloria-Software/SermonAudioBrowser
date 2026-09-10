@@ -24,7 +24,7 @@
         </h5>
       </div>
     </div>
-    <div class="position-absolute" style="z-index:1000; bottom:0; right:0;">
+    <div class="position-absolute" style="z-index:2; bottom:0; right:0;">
       @if (sermon().series) {
         <a (click)="selectSeries(sermon().series?.seriesID)" class="badge rounded-pill text-bg-secondary o-80 ms-auto my-auto text-decoration-none clickable">Series: {{sermon().series?.title}}</a>
       }
@@ -68,7 +68,7 @@
     @if (!showAudio && !showVideo) {
       <div class="row">
         <div class="col">
-          <div class="position-absolute w-100" style="z-index:1000;">
+          <div class="position-absolute w-100" style="z-index:2;">
             <div class="mt-3 pt-2 listen-view-buttons">
               <div class="row d-flex justify-content-center">
                 <div class="col">
