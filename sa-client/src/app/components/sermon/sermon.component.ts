@@ -16,6 +16,7 @@ import * as AvatarSize from '../../models/enums/avatar-size'
 })
 export class SermonComponent implements OnInit {
   sermon = input.required<SermonAudioSermon>();
+  innerWidth = input.required<number>();
   @Output() seriesSelected: EventEmitter<number> = new EventEmitter();
   @Output() speakerSelected: EventEmitter<string> = new EventEmitter();
 
@@ -55,7 +56,7 @@ export class SermonComponent implements OnInit {
       this.hasVideo = true;
     }
 
-    this.maxNumberOfPeaks = this.computePeakCount(window.innerWidth);
+    this.maxNumberOfPeaks = this.computePeakCount(this.innerWidth());
     let scriptures = sermon.bibleText?.split(";") ?? [];
     scriptures.forEach(s => this.sermonScriptures.push(s.trim()))
   }
