@@ -147,7 +147,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getSpeakers(){
-    this.speakers$ = this._saService.getSpeakers().pipe(
+    this.speakers$ = this._saService.getSpeakers(this.seriesID).pipe(
       takeUntil(this.ngUnsubscribe),
       map(results => results.results)
     );
@@ -164,8 +164,8 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
     const element = event.target as HTMLInputElement;
     const value = element.value;
     const id = isNaN(+value) ? 0 : +value;
-    
     this.selectSeries(id);
+    this.getSpeakers();
   }
 
   selectSeries(seriesID: number){

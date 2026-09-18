@@ -10,20 +10,20 @@
         <bible-reference-picker max-number-of-references="1" allow-whole-book-submission="true" class="form-control" (referencesUpdated)="onReferencesUpdated($any($event).detail)"></bible-reference-picker>
       </div>
       <div class="col-6 col-lg-2">
-        <label for="ddlSpeaker" class="form-label">Speaker</label>
-        <select name="ddlSpeaker" id="ddlSpeaker" class="form-select" [ngModel]="speaker" (change)="onSpeakerChanged($event)">
-          <option value="">All</option>
-          @for (speaker of speakers$ | async; track speaker) {
-            <option [value]="speaker.displayName">{{speaker.displayName}}</option>
-          }
-        </select>
-      </div>
-      <div class="col-6 col-lg-2">
         <label for="ddlSeries" class="form-label">Series</label>
         <select name="ddlSeries" id="ddlSeries" class="form-select" [ngModel]="seriesID" (change)="onSeriesChanged($event)">
           <option value="0">All</option>
           @for (item of series$ | async; track item) {
             <option [value]="item.seriesID">{{item.title}} ({{item.count}})</option>
+          }
+        </select>
+      </div>
+      <div class="col-6 col-lg-2">
+        <label for="ddlSpeaker" class="form-label">Speaker</label>
+        <select name="ddlSpeaker" id="ddlSpeaker" class="form-select" [ngModel]="speaker" (change)="onSpeakerChanged($event)">
+          <option value="">All</option>
+          @for (speaker of speakers$ | async; track speaker) {
+            <option [value]="speaker.displayName">{{speaker.displayName}}</option>
           }
         </select>
       </div>
