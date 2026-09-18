@@ -19,8 +19,14 @@ export class SermonAudioServiceService {
     this._baseApiURL = environment.proxySermonApi;
   }
 
-  public getSpeakers(): Observable<SermonAudioV2ResponseWrapper<SermonAudioSpeaker>>{
-    return this._httpClient.get<any>(`${this._baseApiURL}/speakers`).pipe(map(results => {
+  public getSpeakers(seriesID?: number): Observable<SermonAudioV2ResponseWrapper<SermonAudioSpeaker>>{
+    let params = new HttpParams();
+
+    if (seriesID) {
+      params = params.append('seriesID', seriesID);
+    }
+
+    return this._httpClient.get<any>(`${this._baseApiURL}/speakers`, {params: params}).pipe(map(results => {
       if (results.body)
       {
         let body: SermonAudioV2ResponseWrapper<SermonAudioSpeaker> = JSON.parse(results.body);
