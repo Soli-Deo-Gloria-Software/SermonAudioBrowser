@@ -54,6 +54,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bibleBooks.push(book);
     });
     this.innerWidth = window.innerWidth;
+    this.setResponivePaginatorSize(window.innerWidth);
     this._route.queryParamMap
     .pipe(
       debounceTime(100),
