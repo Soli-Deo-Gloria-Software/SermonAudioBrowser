@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subject } from 'rxjs';
@@ -41,6 +41,8 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   sermonId: number = 0;
   referenceFilter: IBibleReference | undefined;
   keywordControl = new FormControl('');
+  innerWidth: number;
+  maxPaginationSize: number = 5;
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
   protected ngDestroy: Subject<void> = new Subject<void>();
 
@@ -51,7 +53,8 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
       if (book)
         this.bibleBooks.push(book);
     });
-
+    this.innerWidth = window.innerWidth;
+    this.setResponivePaginatorSize(window.innerWidth);
     this._route.queryParamMap
     .pipe(
       debounceTime(100),
@@ -90,6 +93,22 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.searchKeyword = value ?? '';
       this.search();
     })
+  }
+
+  @HostListener('window:resize', ['\$event'])
+  onResize(event: Event) {
+    this.innerWidth = window.innerWidth;
+    this.setResponivePaginatorSize(this.innerWidth);
+  }
+
+  setResponivePaginatorSize(innerWidth: number) {
+    if (innerWidth <= 768) {
+      this.maxPaginationSize = 3;
+    } else if (innerWidth <= 1200) {
+      this.maxPaginationSize = 4;
+    } else {
+      this.maxPaginationSize = 5;
+    }
   }
 
   ngAfterViewInit(): void {

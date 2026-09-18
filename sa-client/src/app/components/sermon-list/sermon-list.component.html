@@ -33,21 +33,20 @@
     
     @for (sermon of sermons$ | async; track sermon; let i = $index) {
       <div>
-        <app-sermon [sermon]="sermon" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
+        <app-sermon [sermon]="sermon" [innerWidth]="innerWidth" (speakerSelected)="selectSpeaker($event)" (seriesSelected)="selectSeries($event)"></app-sermon>
       </div>
     }
 
-    <div class="ms-4">
+    <div>
       @if (totalCount > pageSize) {
         <ngb-pagination
           [(page)]="pageNumber"
           [pageSize]="pageSize"
           [collectionSize]="totalCount"
           (pageChange)="pageChanged()"
-          [maxSize]="5"
+          [maxSize]="maxPaginationSize"
           [rotate]="true"
           [ellipses]="true"
-          [boundaryLinks]="true"
         ></ngb-pagination>
       }
     </div>
