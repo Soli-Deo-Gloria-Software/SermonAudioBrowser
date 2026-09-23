@@ -6,7 +6,7 @@ import { randomString } from '../../utilities';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BibleParser, TextParagraph } from '@soli-deo-gloria-software/bible-reference-finder';
 import { EsvResponse } from '../../models/Esv/esv-response.model';
-import * as AvatarSize from '../../models/enums/avatar-size'
+import * as sdg from '@soli-deo-gloria-software/sdg-components'
 
 @Component({
   selector: 'app-sermon',
@@ -32,7 +32,6 @@ export class SermonComponent implements OnInit {
   descriptionParagraphs!: TextParagraph[];
   bibleTexts: string[] = [];
   bibleParser: BibleParser = new BibleParser();
-  AvatarSize = AvatarSize.AvatarSize;
   maxNumberOfPeaks!: number;
   toolTipScripture!: SafeHtml;
   toolTipReference!: string;

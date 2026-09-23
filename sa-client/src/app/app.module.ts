@@ -13,7 +13,6 @@ import { WaveformComponent } from './components/waveform/waveform.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { RouterModule, Routes } from '@angular/router';
-import { AvatarComponent } from './components/avatar/avatar.component';
 import { ScriptureDisplayComponent } from './components/scripture-display/scripture-display.component';
 import { SdgComponentsAngularModule } from '@soli-deo-gloria-software/sdg-components-angular'
 
@@ -24,7 +23,6 @@ const routes: Routes = [
 
 @NgModule({ declarations: [
         AppComponent,
-        AvatarComponent,
         ScriptureDisplayComponent,
         SermonComponent,
         SermonListComponent,
