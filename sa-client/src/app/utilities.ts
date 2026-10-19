@@ -60,7 +60,18 @@ export const DefaultWaveform = (maxNumberOfPeaks:number):number[] =>{
   return peaks;
 }
 
-export const EnumParse = <T>(enumObject: T, value: string): T[keyof T] | undefined=> enumObject[value as keyof typeof enumObject];
+export const EnumParse = <T>(enumObject: T, value: string): T[keyof T] | undefined => enumObject[value as keyof typeof enumObject];
+
+export function getEnumKeyByValue<T extends object>(enumObject: T, value: unknown): T[keyof T] | undefined {
+  const entry = Object.entries(enumObject).find(([_, val]) => val === value);
+  let found = entry ? (entry[0]) : undefined;
+
+  if (found) {
+    return enumObject[found as keyof typeof enumObject];
+  }
+
+  return undefined;
+}
 
 // Gutter percent for waveform peaks. This was done with trial and error.
 // I should probably refactor to make the gutter dependent on the size of the reduced waveform,
