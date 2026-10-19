@@ -9,6 +9,7 @@ import { BibleBook, BibleBookOsisCodes } from '@soli-deo-gloria-software/bible-b
 import { SermonAudioSpeaker } from '../models/sermon-audio-speaker.model';
 import { SermonAudioSeries } from '../models/sermon-audio-series.model';
 import { IBibleReference } from '@soli-deo-gloria-software/bible-reference-finder';
+import { SortBy } from '../models/SortBy.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +53,7 @@ export class SermonAudioServiceService {
     }))
   }
 
-  public getSermons(pageNumber: number, pageSize: number, keyword?: string, reference?: IBibleReference, speaker?: string, seriesID?: number, sermonId?: number) : Observable<SermonAudioV2ResponseWrapper<SermonAudioSermon>>{
+  public getSermons(pageNumber: number, pageSize: number, keyword?: string, reference?: IBibleReference, speaker?: string, seriesID?: number, sermonId?: number, sortBy?: SortBy) : Observable<SermonAudioV2ResponseWrapper<SermonAudioSermon>>{
     let params: HttpParams = new HttpParams();
 
     params = params.append('page', pageNumber);
@@ -76,6 +77,10 @@ export class SermonAudioServiceService {
 
     if (sermonId && sermonId > 0){
       params = params.append('sermonIDs', sermonId)
+    }
+
+    if (sortBy) {
+      params = params.append('sortBy', sortBy);
     }
 
     return this._httpClient.get<any>(`${this._baseApiURL}/sermons`, {params: params}).pipe(

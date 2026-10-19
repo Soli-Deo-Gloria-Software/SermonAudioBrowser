@@ -11,6 +11,8 @@ import { SermonAudioSpeaker } from '../../models/sermon-audio-speaker.model';
 import { SermonAudioServiceService } from '../../services/sermon-audio-service.service';
 import { ActivatedRoute } from '@angular/router';
 import { IBibleReference } from '@soli-deo-gloria-software/bible-reference-finder';
+import { SortBy } from '../../models/SortBy.enum';
+import * as utilities from '../../utilities'
 
 @Component({
     selector: 'app-sermon-list',
@@ -43,6 +45,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   keywordControl = new FormControl('');
   innerWidth: number;
   maxPaginationSize: number = 5;
+  sortBy?: SortBy;
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
   protected ngDestroy: Subject<void> = new Subject<void>();
 
@@ -65,6 +68,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
         let speaker = query.get('speaker');
         let series = query.get('series');
         let sermonId = query.get('sermonId');
+        let sortBy = query.get('sortBy');
 
         if (speaker){
             this.speaker = speaker;
@@ -76,6 +80,13 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (sermonId && !isNaN(+sermonId)) {
           this.sermonId = +sermonId;
+        }
+
+        if (sortBy) {
+          this.sortBy = utilities.EnumParse(SortBy, sortBy.toLowerCase());
+          if (!this.sortBy) {
+            this.sortBy = utilities.getEnumKeyByValue(SortBy, sortBy.toLowerCase());
+          }
         }
 
         this.pageNumber = 1;
@@ -135,7 +146,7 @@ export class SermonListComponent implements OnInit, AfterViewInit, OnDestroy {
   getSermons(){
     this._spinner.show(this.searchSpinner);
     
-    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.referenceFilter, this.speaker, this.seriesID, this.sermonId).pipe(
+    this.sermons$ = this._saService.getSermons(this.pageNumber, this.pageSize, this.searchKeyword, this.referenceFilter, this.speaker, this.seriesID, this.sermonId, this.sortBy).pipe(
       takeUntil(this.ngUnsubscribe),
       map(results => 
         {
